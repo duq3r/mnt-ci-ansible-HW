@@ -6,7 +6,7 @@
 3. Скачайте [playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой репозиторий.
 
 ## Выполнено
-'''bash
+```bash
 > $ ansible --version                                                                       ⬡ none 
 ansible [core 2.13.5]
   config file = None
@@ -17,11 +17,11 @@ ansible [core 2.13.5]
   python version = 3.10.8 (main, Oct 13 2022, 09:48:40) [Clang 14.0.0 (clang-1400.0.29.102)]
   jinja version = 3.1.2
   libyaml = True
-  '''
+  ```
 
 ## Основная часть
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте какое значение имеет факт `some_fact` для указанного хоста при выполнении playbook'a.
-   '''bash
+```bash
    > $ ansible-playbook -i inventory/test.yml site.yml                                         ⬡ none [±master ●]
 
 PLAY [Print os facts] *****************************************************************************************
@@ -58,18 +58,18 @@ localhost                  : ok=3    changed=0    unreachable=0    failed=0    s
 CONTAINER ID   IMAGE                      COMMAND           CREATED        STATUS        PORTS     NAMES
 4275ee63f606   pycontribs/ubuntu:latest   "sleep 6000000"   16 hours ago   Up 16 hours             ubuntu
 1928cb482f30   pycontribs/centos:7        "sleep 6000000"   16 hours ago   Up 16 hours             centos7
-```  
+``` 
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
-   ```bash
+```bash
 ok: [centos7] => {
     "msg": "el"
 }
 ok: [ubuntu] => {
     "msg": "deb"
 }
-   ```
+```
 5. Добавьте факты в `group_vars` каждой из групп хостов так, чтобы для `some_fact` получились следующие значения: для `deb` - 'deb default fact', для `el` - 'el default fact'.
-  ```bash
+```bash
  ok: [centos7] => {
     "msg": "el default fact"
 }
@@ -78,7 +78,7 @@ ok: [ubuntu] => {
 }  
 ```
 6.  Повторите запуск playbook на окружении `prod.yml`. Убедитесь, что выдаются корректные значения для всех хостов.
-7.    ```bash
+```bash
  ok: [centos7] => {
     "msg": "el default fact"
 }
