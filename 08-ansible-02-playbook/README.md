@@ -8,7 +8,7 @@
 
 ## Основная часть
 1. Приготовьте свой собственный inventory файл `prod.yml`.
-   ```bash
+```bash
 ---
 elasticsearch:
   hosts:
@@ -17,15 +17,11 @@ elasticsearch:
       ansible_connection: ssh
       ansible_user: app-admin
       ansible_ssh_private_key_file: ssh_env/id_rsa_insecure
-
-
-   ```
+```
 2. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает kibana. <br>
 
 3. При создании tasks рекомендую использовать модули: `get_url`, `template`, `unarchive`, `file`.
-   ```bash
 
-   ```
 4. Tasks должны: скачать нужной версии дистрибутив, выполнить распаковку в выбранную директорию, сгенерировать конфигурацию с параметрами.
 group_vars/elasticsearch/vars.yml
 ```bash
@@ -33,8 +29,8 @@ group_vars/elasticsearch/vars.yml
 elastic_version: "7.10.1"
 elastic_home: "/opt/elastic/{{ elastic_version }}"
 kibana_home: "/opt/kibana/{{ elastic_version }}"
-
 ```
+
 site.yml
 ```bash
 ...
@@ -77,6 +73,7 @@ site.yml
       tags: kibana
 
 ```
+
 templates/kibana.sh.j2
 ```bash
 # Warning: This file is Ansible Managed, manual changes will be overwritten on next playbook run.
@@ -131,7 +128,7 @@ WARNING: PATH altered to include /usr/bin
 Последний варнинг происходит от того, что ansible установлен в директории пользователя командой pip3, а бинарник Питона лежит в /usr/bin`. Вроде не критично.
 
 6. Попробуйте запустить playbook на этом окружении с флагом `--check`.
-   ```bash
+```bash
    $ ansible-playbook -i inventory/prod.yml playbook.yml --check
 
 PLAY [Install Java] **********************************************************************************
