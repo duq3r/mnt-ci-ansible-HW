@@ -118,7 +118,7 @@ warn_list:  # or 'skip_list' to silence them completely
 Finished with 0 failure(s), 7 warning(s) on 1 files.
 ```
 Нужно было установить права: 0644 для архивов и 0755 для папок и исполныемых файлов.
-Чтобы избавиться от "Overriding detected file kind" переименовал site.yml в playbook.yml
+Чтобы избавиться от "Overriding detected file kind"
 После исправления:
 ```
 $ ansible-lint site.yml
@@ -127,9 +127,9 @@ WARNING: PATH altered to include /usr/bin
 
 Последний варнинг происходит от того, что ansible установлен в директории пользователя командой pip3, а бинарник Питона лежит в /usr/bin`. Вроде не критично.
 
-6. Попробуйте запустить playbook на этом окружении с флагом `--check`.
+1. Попробуйте запустить playbook на этом окружении с флагом `--check`.
 ```bash
-   $ ansible-playbook -i inventory/prod.yml playbook.yml --check
+   $ ansible-playbook -i inventory/prod.yml site.yml --check
 
 PLAY [Install Java] **********************************************************************************
 
@@ -335,7 +335,9 @@ PLAY RECAP *********************************************************************
 centos_elk_server          : ok=13   changed=0    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0
 ```
 9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
+    <br>## Выполнено!.
 10. Готовый playbook выложите в свой репозиторий, в ответ предоставьте ссылку на него.
+ <br>## Выполнено!.
 
 ## Необязательная часть
 
