@@ -1013,9 +1013,9 @@ devops-netology
 
 10. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
 
-    https://github.com/run0ut/netology-83/blob/main/README.md
+    https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-03-yandex
 
 11. Готовый playbook выложите в свой репозиторий, в ответ предоставьте ссылку на него.
 
-    https://github.com/run0ut/netology-83/ 
+    [https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-03-yandex](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-03-yandex)
 
