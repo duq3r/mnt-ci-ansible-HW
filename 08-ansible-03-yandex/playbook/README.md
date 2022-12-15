@@ -1,4 +1,3 @@
-# netology-83
 
 ## Что делает playbook
 
@@ -8,7 +7,7 @@
 - Kibana
 - Filebeat
 
-Схема свяхи между приложениями:
+Схема связи между приложениями:
 
 ![asd](media/apps-scheme.png)
 
