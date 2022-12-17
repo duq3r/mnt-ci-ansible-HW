@@ -139,7 +139,7 @@ devops-netology
 
     TASK [Configure Elasticsearch] ************************************************************************************
     --- before: /etc/elasticsearch/elasticsearch.yml
-    +++ after: /home/sergey/.ansible/tmp/ansible-local-48194pwd_mstj/tmpnadd2z4p/elasticsearch.yml.j2
+    +++ after: /home/e.madan/.ansible/tmp/ansible-local-48194pwd_mstj/tmpnadd2z4p/elasticsearch.yml.j2
     @@ -1,82 +1,7 @@
     -# ======================== Elasticsearch Configuration =========================
     -#
@@ -233,7 +233,7 @@ devops-netology
 
     TASK [Configure Elastic JVM] **************************************************************************************
     --- before: /etc/sysconfig/elasticsearch
-    +++ after: /home/sergey/.ansible/tmp/ansible-local-48194pwd_mstj/tmpzfwboztl/elasticsearch_sysconfig.j2
+    +++ after: /home/e.madan/.ansible/tmp/ansible-local-48194pwd_mstj/tmpzfwboztl/elasticsearch_sysconfig.j2
     @@ -1,52 +1,3 @@
     -################################
     -# Elasticsearch
@@ -307,7 +307,7 @@ devops-netology
 
     TASK [Configure Kibana] *******************************************************************************************
     --- before: /etc/kibana/kibana.yml
-    +++ after: /home/sergey/.ansible/tmp/ansible-local-48194pwd_mstj/tmpzehdh_9j/kibana.yml.j2
+    +++ after: /home/e.madan/.ansible/tmp/ansible-local-48194pwd_mstj/tmpzehdh_9j/kibana.yml.j2
     @@ -1,111 +1,3 @@
     -# Kibana is served by a back end server. This setting specifies the port to use.
     -#server.port: 5601
@@ -574,7 +574,7 @@ devops-netology
         hosts:
         ...
             fb-instance:
-            ansible_host: 51.250.9.129
+            ansible_host: 84.201.157.66
         ...
         filebeat:
         hosts:
@@ -629,7 +629,7 @@ devops-netology
 
         TASK [Configure Filebeat] ******************************************************************************************
         --- before: /etc/filebeat/filebeat.yml
-        +++ after: /home/sergey/.ansible/tmp/ansible-local-49711ib5z3lkr/tmpf36t6y5z/filebeat.yml.j2
+        +++ after: /home/e.madan/.ansible/tmp/ansible-local-49711ib5z3lkr/tmpf36t6y5z/filebeat.yml.j2
         @@ -1,270 +1,26 @@
         -###################### Filebeat Configuration Example #########################
         -
