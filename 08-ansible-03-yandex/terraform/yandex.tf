@@ -28,9 +28,9 @@ resource "yandex_vpc_subnet" "subnet" {
 # Инстансы
 resource "yandex_compute_instance" "vm" {
   for_each = {
-    el_instance = "netology-83-elk"
-    k_instance = "netology-83-k"
-    fb_instance = "netology-83-fb"
+    el_instance = "netology-elk"
+    k_instance = "netology-k"
+    fb_instance = "netology-fb"
   }
 
   name        = each.value
@@ -47,7 +47,7 @@ resource "yandex_compute_instance" "vm" {
   boot_disk {
     initialize_params {
       image_id = data.yandex_compute_image.ubuntu.id
-      type     = "network-hdd"
+      type     = "network-ssd"
       size     = "20"
     }
   }
