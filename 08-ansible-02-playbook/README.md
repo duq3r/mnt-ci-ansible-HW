@@ -10,13 +10,22 @@
 1. Приготовьте свой собственный inventory файл `prod.yml`.
 ```bash
 ---
+---
 elasticsearch:
   hosts:
-    centos:
-      ansible_host: 172.30.0.2
+    centos_elastic_server:
+      ansible_host: 127.0.0.1
       ansible_connection: ssh
-      ansible_user: app-admin
-      ansible_ssh_private_key_file: ssh_env/id_rsa_insecure
+      ansible_user: elk-admin
+      ansible_ssh_private_key_file: 
+
+kibana:
+  hosts:
+    centos_kibana_server:
+      ansible_host: 127.0.0.1
+      ansible_connection: ssh
+      ansible_user: elk-admin
+      ansible_ssh_private_key_file: 
 ```
 2. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает kibana. <br>
 
@@ -28,19 +37,96 @@ group_vars/elasticsearch/vars.yml
 ---
 elastic_version: "7.10.1"
 elastic_home: "/opt/elastic/{{ elastic_version }}"
-kibana_home: "/opt/kibana/{{ elastic_version }}"
 ```
-
+group_vars/kibana/vars.yml
+```bash
+---
+kibana_version: "7.10.1"
+kibana_home: "/opt/kibana/{{ kibana_version }}"
+```
 site.yml
 ```bash
-...
-- name: Install Kibana
+---
+- name: Install Java
+  hosts: all
+  tasks:
+    - name: Set facts for Java 11 vars
+      set_fact:
+        java_home: "/opt/jdk/{{ java_jdk_version }}"
+      tags: java
+    - name: Upload .tar.gz file containing binaries from local storage
+      copy:
+        src: "{{ java_oracle_jdk_package }}"
+        dest: "/tmp/jdk-{{ java_jdk_version }}.tar.gz"
+      register: download_java_binaries
+      until: download_java_binaries is succeeded
+      tags: java
+    - name: Ensure installation dir exists
+      become: true
+      file:
+        state: directory
+        path: "{{ java_home }}"
+      tags: java
+    - name: Extract java in the installation directory
+      become: true
+      unarchive:
+        copy: false
+        src: "/tmp/jdk-{{ java_jdk_version }}.tar.gz"
+        dest: "{{ java_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ java_home }}/bin/java"
+      tags:
+        - java
+    - name: Export environment variables
+      become: true
+      template:
+        src: jdk.sh.j2
+        dest: /etc/profile.d/jdk.sh
+      tags: java
+- name: Install Elasticsearch
   hosts: elasticsearch
+  tasks:
+    - name: Upload tar.gz Elasticsearch from remote URL
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+        dest: "/tmp/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+        mode: 0755
+        timeout: 60
+        force: true
+        validate_certs: false
+      register: get_elastic
+      until: get_elastic is succeeded
+      tags: elastic
+    - name: Create directrory for Elasticsearch
+      file:
+        state: directory
+        path: "{{ elastic_home }}"
+      tags: elastic
+    - name: Extract Elasticsearch in the installation directory
+      become: true
+      unarchive:
+        copy: false
+        src: "/tmp/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+        dest: "{{ elastic_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ elastic_home }}/bin/elasticsearch"
+      tags:
+        - elastic
+    - name: Set environment Elastic
+      become: true
+      template:
+        src: templates/elk.sh.j2
+        dest: /etc/profile.d/elk.sh
+        mode: 0755
+      tags: elastic
+
+- name: Install Kibana
+  hosts: kibana
   tasks:
     - name: Get Kibana 
       get_url: 
-        url: https://artifacts.elastic.co/downloads/kibana/kibana-{{ elastic_version }}-linux-x86_64.tar.gz
-        dest: "/tmp/kibana-{{ elastic_version }}-linux-x86_64.tar.gz"
+        url: https://artifacts.elastic.co/downloads/kibana/kibana-{{ kibana_version }}-linux-x86_64.tar.gz
+        dest: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
         mode: 0755
         timeout: 60
         force: true
@@ -59,7 +145,7 @@ site.yml
       become: true
       unarchive:
         copy: false
-        src: "/tmp/kibana-{{ elastic_version }}-linux-x86_64.tar.gz"
+        src: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
         dest: "{{ kibana_home }}"
         extra_opts: [--strip-components=1]
         creates: "{{ kibana_home }}/bin/kibana"
@@ -67,14 +153,14 @@ site.yml
     - name: Set environment Kibana
       become: true
       template:
-        src: templates/kibana.sh.j2
+        src: templates/kib.sh.j2
         dest: /etc/profile.d/kibana.sh
         mode: 0755
       tags: kibana
 
 ```
 
-templates/kibana.sh.j2
+templates/kib.sh.j2
 ```bash
 # Warning: This file is Ansible Managed, manual changes will be overwritten on next playbook run.
 #!/usr/bin/env bash
