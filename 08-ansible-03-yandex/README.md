@@ -23,38 +23,126 @@ devops-netology
     
     - `playbook.yml`
         ```yml
-        ---
-        ...
-        - name: Install Kibana
-        hosts: kibana
+      ---
+      - name: Install Elasticsearch
+        hosts: elasticsearch
         handlers:
-            - name: restart Kibana
+          - name: Restart Elasticsearch
             become: true
             service:
-                name: kibana
-                state: restarted
+              name: elasticsearch
+              state: restarted
+            tags: elastic
+        tasks:
+          - name: "Download Elasticsearch's rpm"
+            ansible.builtin.get_url: 
+              url: "https://storage.yandexcloud.net/project.files/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
+              dest: "/tmp/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
+            register: download_elastic
+            until: download_elastic is succeeded
+            tags: elastic
+          - name: Install Elasticsearch
+            become: true
+            ansible.builtin.yum:
+              name: "/tmp/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
+              state: present
+            tags: elastic
+          - name: Configure Elasticsearch
+            become: true
+            template:
+              src: elasticsearch.yml.j2
+              dest: /etc/elasticsearch/elasticsearch.yml
+              mode: 0644
+            tags: elastic
+          - name: Configure Elastic JVM
+            become: true
+            template:
+              src: elasticsearch_sysconfig.j2
+              dest: /etc/sysconfig/elasticsearch
+              mode: 0644
+            notify: Restart Elasticsearch
+            tags: elastic
+      - name: Install Kibana
+        hosts: kibana
+        handlers:
+          - name: Restart Kibana
+            become: true
+            service:
+              name: kibana
+              state: restarted
             tags: kibana
         tasks:
-            - name: "Download Kibana's rpm"
-            get_url:
-                url: "https://artifacts.elastic.co/downloads/kibana/kibana-{{ elk_stack_version }}-x86_64.rpm"
-                dest: "/tmp/kibana-{{ elk_stack_version }}-x86_64.rpm"
+          - name: "Download Kibana's rpm"
+            ansible.builtin.get_url: 
+              url: "https://storage.yandexcloud.net/project.files/kibana-{{ elk_stack_version }}-x86_64.rpm"
+              dest: "/tmp/kibana-{{ elk_stack_version }}-x86_64.rpm"
             register: download_kibana
             until: download_kibana is succeeded
             tags: kibana
-            - name: Install Kibana
+          - name: Install Kibana
             become: true
             yum:
-                name: "/tmp/kibana-{{ elk_stack_version }}-x86_64.rpm"
-                state: present
+              name: "/tmp/kibana-{{ elk_stack_version }}-x86_64.rpm"
+              state: present
             tags: kibana
-            - name: Configure Kibana
+          - name: Configure Kibana
             become: true
             template:
-                src: kibana.yml.j2
-                dest: /etc/kibana/kibana.yml
-            notify: restart Kibana
+              src: kibana.yml.j2
+              dest: /etc/kibana/kibana.yml
+              mode: 0644
+            notify: Restart Kibana
             tags: kibana
+      - name: Install Filebeat
+        hosts: filebeat
+        handlers:
+          - name: Restart Filebeat
+            become: true
+            service:
+              name: filebeat
+              state: restarted
+            tags: filebeat
+        tasks:
+          - name: "Download Filebeat's rpm"
+            ansible.builtin.get_url:
+              url: "https://storage.yandexcloud.net/project.files/filebeat-{{ elk_stack_version }}-x86_64.rpm"
+              dest: "/tmp/filebeat-{{ elk_stack_version }}-x86_64.rpm"
+            register: download_filebeat
+            until: download_filebeat is succeeded
+            tags: filebeat
+          - name: Install Filebeat
+            become: true
+            ansible.builtin.yum:
+              name: "/tmp/filebeat-{{ elk_stack_version }}-x86_64.rpm"
+              state: present
+            tags: filebeat
+          - name: Configure Filebeat
+            become: true
+            template:
+              src: filebeat.yml.j2
+              dest: /etc/filebeat/filebeat.yml
+              mode: 0644
+            notify: Restart Filebeat
+            tags: filebeat
+          - name: Enable and configure the system module
+            become: true
+            command:
+              cmd: filebeat modules enable system
+              chdir: /usr/share/filebeat/bin
+            register: filebeat_modules
+            changed_when: filebeat_modules.stdout != 'Module system is already enabled'
+            tags: filebeat
+          - name: Load Kibana dashboards
+            become: true
+            command:
+              cmd: filebeat setup
+              chdir: /usr/share/filebeat/bin
+            register: filebeat_setup
+            notify: Restart Filebeat
+            changed_when: false
+            until: filebeat_setup is succeeded
+            delay: 40
+            tags: filebeat
         ```
     - `templates/kibana.yml.j2`
         ```yml
@@ -65,61 +153,156 @@ devops-netology
 4. Приготовьте свой собственный inventory файл `prod.yml`.
     `inventory/prod/hosts.yml`
     ```yml
-    ---
-    all:
-      hosts:
-        ...
-        k-instance:
-          ansible_host: 62.84.127.53
-        ...
-    kibana:
-      hosts:
-        k-instance:
+        ---
+        all:
+        hosts:
+            el-instance:
+            ansible_host: 62.84.119.194
+            k-instance:
+            ansible_host: 62.84.117.90
+            fb-instance:
+            ansible_host: 51.250.15.218
+        vars:
+            ansible_connection: ssh
+            ansible_user: iworks
+        elasticsearch:
+        hosts:
+            el-instance:
+        kibana:
+        hosts:
+            k-instance:
+        filebeat:
+        hosts:
+            fb-instance:
+
     ```
 5. Запустите `ansible-lint site.yml` и исправьте ошибки, если они есть.
-    ```diff
-    --- a/playbook.yml
-    +++ b/playbook.yml
-    @@ -27,12 +27,14 @@
-        template:
-            src: elasticsearch.yml.j2
-            dest: /etc/elasticsearch/elasticsearch.yml
-    +        mode: 0644
-        tags: elastic
-        - name: Configure Elastic JVM
-        become: true
-        template:
-            src: elasticsearch_sysconfig.j2
-            dest: /etc/sysconfig/elasticsearch
-    +        mode: 0644
-        notify: restart Elasticsearch
-        tags: elastic
-        - name: Install Kibana
-    @@ -63,5 +65,6 @@
-        template:
-            src: kibana.yml.j2
-            dest: /etc/kibana/kibana.yml
-    +        mode: 0644
-        notify: restart Kibana
-        tags: kibana
+    ```bash
+#ansible-lint playbook.yml skip_list                                                                         
+WARNING  Listing 16 violation(s) that are fatal
+fqcn[action-core]: Use FQCN for builtin module actions (service).
+playbook.yml:5 Use `ansible.builtin.service` or `ansible.legacy.service` instead.
+
+risky-file-permissions: File permissions unset or incorrect. (warning)
+playbook.yml:12 Task/Handler: Download Elasticsearch's rpm
+
+yaml[trailing-spaces]: Trailing spaces
+playbook.yml:13
+
+yaml[trailing-spaces]: Trailing spaces
+playbook.yml:16
+
+fqcn[action-core]: Use FQCN for builtin module actions (template).
+playbook.yml:28 Use `ansible.builtin.template` or `ansible.legacy.template` instead.
+
+fqcn[action-core]: Use FQCN for builtin module actions (template).
+playbook.yml:35 Use `ansible.builtin.template` or `ansible.legacy.template` instead.
+
+fqcn[action-core]: Use FQCN for builtin module actions (service).
+playbook.yml:46 Use `ansible.builtin.service` or `ansible.legacy.service` instead.
+
+risky-file-permissions: File permissions unset or incorrect. (warning)
+playbook.yml:53 Task/Handler: Download Kibana's rpm
+
+yaml[trailing-spaces]: Trailing spaces
+playbook.yml:54
+
+fqcn[action-core]: Use FQCN for builtin module actions (yum).
+playbook.yml:60 Use `ansible.builtin.yum` or `ansible.legacy.yum` instead.
+
+fqcn[action-core]: Use FQCN for builtin module actions (template).
+playbook.yml:66 Use `ansible.builtin.template` or `ansible.legacy.template` instead.
+
+fqcn[action-core]: Use FQCN for builtin module actions (service).
+playbook.yml:77 Use `ansible.builtin.service` or `ansible.legacy.service` instead.
+
+risky-file-permissions: File permissions unset or incorrect. (warning)
+playbook.yml:84 Task/Handler: Download Filebeat's rpm
+
+fqcn[action-core]: Use FQCN for builtin module actions (template).
+playbook.yml:97 Use `ansible.builtin.template` or `ansible.legacy.template` instead.
+
+fqcn[action-core]: Use FQCN for builtin module actions (command).
+playbook.yml:105 Use `ansible.builtin.command` or `ansible.legacy.command` instead.
+
+fqcn[action-core]: Use FQCN for builtin module actions (command).
+playbook.yml:113 Use `ansible.builtin.command` or `ansible.legacy.command` instead.
+
+You can skip specific rules or tags by adding them to your configuration file:
+# .config/ansible-lint.yml
+warn_list:  # or 'skip_list' to silence them completely
+  - experimental  # all rules tagged as experimental
+  - fqcn[action-core]  # Use FQCN for builtin actions.
+  - yaml[trailing-spaces]  # Violations reported by yamllint.
+
+                              Rule Violation Summary                              
+ count tag                    profile    rule associated tags                     
+     3 yaml[trailing-spaces]  basic      formatting, yaml                         
+     3 risky-file-permissions safety     unpredictability, experimental (warning) 
+    10 fqcn[action-core]      production formatting                               
+
+Failed after min profile: 13 failure(s), 3 warning(s) on 2 files.
     ```
+
 6. Попробуйте запустить playbook на этом окружении с флагом `--check`.
     ```log
-    $ ansible-playbook -i inventory/prod playbook.yml --check
+#ansible-playbook playbook.yml -i inventory/prod/hosts.yml --check  
 
-    PLAY [Install Elasticsearch] **************************************************************************************
+PLAY [Install Elasticsearch] **********************************************************************************************************
 
-    TASK [Gathering Facts] ********************************************************************************************
-    ok: [el-instance]
+TASK [Gathering Facts] ****************************************************************************************************************
+ok: [el-instance]
 
-    TASK [Download Elasticsearch's rpm] *******************************************************************************
-    changed: [el-instance]
+TASK [Download Elasticsearch's rpm] ***************************************************************************************************
+ok: [el-instance]
 
-    TASK [Install Elasticsearch] **************************************************************************************
-    fatal: [el-instance]: FAILED! => {"changed": false, "msg": "No RPM file matching '/tmp/elasticsearch-7.14.0-x86_64.rpm' found on system", "rc": 127, "results": ["No RPM file matching '/tmp/elasticsearch-7.14.0-x86_64.rpm' found on system"]}
+TASK [Install Elasticsearch] **********************************************************************************************************
+ok: [el-instance]
 
-    PLAY RECAP ********************************************************************************************************
-    el-instance                : ok=2    changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
+TASK [Configure Elasticsearch] ********************************************************************************************************
+ok: [el-instance]
+
+TASK [Configure Elastic JVM] **********************************************************************************************************
+ok: [el-instance]
+
+PLAY [Install Kibana] *****************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************
+ok: [k-instance]
+
+TASK [Download Kibana's rpm] **********************************************************************************************************
+ok: [k-instance]
+
+TASK [Install Kibana] *****************************************************************************************************************
+ok: [k-instance]
+
+TASK [Configure Kibana] ***************************************************************************************************************
+ok: [k-instance]
+
+PLAY [Install Filebeat] ***************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************
+ok: [fb-instance]
+
+TASK [Download Filebeat's rpm] ********************************************************************************************************
+ok: [fb-instance]
+
+TASK [Install Filebeat] ***************************************************************************************************************
+ok: [fb-instance]
+
+TASK [Configure Filebeat] *************************************************************************************************************
+ok: [fb-instance]
+
+TASK [Enable and configure the system module] *****************************************************************************************
+skipping: [fb-instance]
+
+TASK [Load Kibana dashboards] *********************************************************************************************************
+skipping: [fb-instance]
+
+PLAY RECAP ****************************************************************************************************************************
+el-instance                : ok=5    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+fb-instance                : ok=4    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+k-instance                 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
     ```
 7. Запустите playbook на `prod.yml` окружении с флагом `--diff`. Убедитесь, что изменения на системе произведены.
     

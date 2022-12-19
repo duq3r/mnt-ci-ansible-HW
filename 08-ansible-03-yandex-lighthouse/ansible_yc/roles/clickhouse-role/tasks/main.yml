@@ -1,0 +1,71 @@
+---
+# tasks file for clickhouse-role
+- block:
+    - name: Get clickhouse distrib
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
+        mode: 0755
+      with_items: "{{ clickhouse_packages }}"
+  rescue:
+    - name: Get clickhouse distrib
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+        mode: 0755
+- name: Install clickhouse packages
+  become: true
+  ansible.builtin.yum:
+    name:
+      - clickhouse-common-static-{{ clickhouse_version }}.rpm
+      - clickhouse-client-{{ clickhouse_version }}.rpm
+      - clickhouse-server-{{ clickhouse_version }}.rpm
+  notify: Start clickhouse service
+# Настройка конфига clickhouse
+- name: Deploy config clickhouse
+  ansible.builtin.template:
+    src: clickhouse.config.j2
+    dest: "{{ clickhouse_config_path }}"
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+  become: true
+# Настройка конфига пользователей clickhouse
+- name: Deploy users config clickhouse
+  ansible.builtin.template:
+    src: clickhouse.users.j2
+    dest: "{{ clickhouse_users_path }}"
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+  become: true
+# Принудительное использование handlers для сарта сервиса clickhouse-server, иначе не получится создать БД
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+# Запуск clickhouse и проверка, что он запущен
+# - name: Clickhouse start
+#   become: true
+#   ansible.builtin.command: "clickhouse start"
+#   register: clickhouse_restart
+#   failed_when: clickhouse_restart.rc != 0 and clickhouse_restart.rc !=2
+#   changed_when: clickhouse_restart.rc == 0 or clickhouse_restart.rc ==2
+# Задержка после рестарта сервера, что бы успел запустится
+- name: Delay 10 sec
+  ansible.builtin.pause:
+    seconds: 10
+# Создание БД для хранения логов если её не существует
+- name: Create database
+  ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+  register: create_db
+  failed_when: create_db.rc != 82 and create_db.rc != 0 
+  changed_when: create_db.stdout is not search('already exists') and create_db.rc == 0 #or create_db.rc != 82
+# Создание таблицы для хранения логов одной строкой
+- name: Create table for logs
+  ansible.builtin.command: clickhouse-client -q
+                        'CREATE TABLE IF NOT EXISTS  logs.vector_internal_logs (
+                            message String
+                        )
+                        ENGINE = MergeTree()
+                        ORDER BY tuple();'
+  register: create_table
+  changed_when: create_table.rc != 0

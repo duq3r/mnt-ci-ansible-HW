@@ -10,7 +10,6 @@
 1. Приготовьте свой собственный inventory файл `prod.yml`.
 ```bash
 ---
----
 elasticsearch:
   hosts:
     centos_elastic_server:

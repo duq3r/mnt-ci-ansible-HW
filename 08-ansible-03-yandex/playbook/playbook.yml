@@ -11,17 +11,17 @@
   tasks:
     - name: "Download Elasticsearch's rpm"
       ansible.builtin.get_url: 
-        url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
+        url: "https://storage.yandexcloud.net/project.files/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
         dest: "/tmp/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
-        use_proxy: yes 
-      environment:
-        http_proxy: http://58.246.58.150:9002
+      #   use_proxy: yes 
+      # environment:
+      #   http_proxy: http://58.246.58.150:9002
       register: download_elastic
       until: download_elastic is succeeded
       tags: elastic
     - name: Install Elasticsearch
       become: true
-      yum:
+      ansible.builtin.yum:
         name: "/tmp/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
         state: present
       tags: elastic
@@ -38,7 +38,7 @@
         src: elasticsearch_sysconfig.j2
         dest: /etc/sysconfig/elasticsearch
         mode: 0644
-      notify: restart Elasticsearch
+      notify: Restart Elasticsearch
       tags: elastic
 - name: Install Kibana
   hosts: kibana
@@ -51,8 +51,8 @@
       tags: kibana
   tasks:
     - name: "Download Kibana's rpm"
-      get_url:
-        url: "https://artifacts.elastic.co/downloads/kibana/kibana-{{ elk_stack_version }}-x86_64.rpm"
+      ansible.builtin.get_url: 
+        url: "https://storage.yandexcloud.net/project.files/kibana-{{ elk_stack_version }}-x86_64.rpm"
         dest: "/tmp/kibana-{{ elk_stack_version }}-x86_64.rpm"
       register: download_kibana
       until: download_kibana is succeeded
@@ -69,12 +69,12 @@
         src: kibana.yml.j2
         dest: /etc/kibana/kibana.yml
         mode: 0644
-      notify: restart Kibana
+      notify: Restart Kibana
       tags: kibana
 - name: Install Filebeat
   hosts: filebeat
   handlers:
-    - name: restart Filebeat
+    - name: Restart Filebeat
       become: true
       service:
         name: filebeat
@@ -82,15 +82,15 @@
       tags: filebeat
   tasks:
     - name: "Download Filebeat's rpm"
-      get_url:
-        url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-{{ elk_stack_version }}-x86_64.rpm"
+      ansible.builtin.get_url:
+        url: "https://storage.yandexcloud.net/project.files/filebeat-{{ elk_stack_version }}-x86_64.rpm"
         dest: "/tmp/filebeat-{{ elk_stack_version }}-x86_64.rpm"
       register: download_filebeat
       until: download_filebeat is succeeded
       tags: filebeat
     - name: Install Filebeat
       become: true
-      yum:
+      ansible.builtin.yum:
         name: "/tmp/filebeat-{{ elk_stack_version }}-x86_64.rpm"
         state: present
       tags: filebeat
@@ -100,7 +100,7 @@
         src: filebeat.yml.j2
         dest: /etc/filebeat/filebeat.yml
         mode: 0644
-      notify: restart Filebeat
+      notify: Restart Filebeat
       tags: filebeat
     - name: Enable and configure the system module
       become: true
@@ -116,7 +116,7 @@
         cmd: filebeat setup
         chdir: /usr/share/filebeat/bin
       register: filebeat_setup
-      notify: restart Filebeat
+      notify: Restart Filebeat
       changed_when: false
       until: filebeat_setup is succeeded
       delay: 40
