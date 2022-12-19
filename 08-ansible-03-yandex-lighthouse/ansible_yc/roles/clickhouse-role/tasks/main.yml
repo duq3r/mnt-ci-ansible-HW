@@ -23,22 +23,22 @@
   notify: Start clickhouse service
 # Настройка конфига clickhouse
 - name: Deploy config clickhouse
+  become: true
   ansible.builtin.template:
     src: clickhouse.config.j2
     dest: "{{ clickhouse_config_path }}"
     mode: 0644
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
-  become: true
 # Настройка конфига пользователей clickhouse
 - name: Deploy users config clickhouse
+  become: true
   ansible.builtin.template:
     src: clickhouse.users.j2
     dest: "{{ clickhouse_users_path }}"
     mode: 0644
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
-  become: true
 # Принудительное использование handlers для сарта сервиса clickhouse-server, иначе не получится создать БД
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers

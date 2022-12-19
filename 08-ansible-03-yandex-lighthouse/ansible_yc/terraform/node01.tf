@@ -22,6 +22,10 @@ resource "yandex_compute_instance" "node01" {
     subnet_id  = yandex_vpc_subnet.my-net.id
     nat        = true
   }
+  #Прерываемая ВМ
+  scheduling_policy {
+    preemptible = true
+  }
 
   metadata = {
     ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
