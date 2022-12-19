@@ -1,5 +1,5 @@
-# Домашнее задание к занятию "08.03 Использование Yandex Cloud" dev-17_ansible-03-yandex-yakovlev_vs
-ansible-03-yandex
+# Домашнее задание к занятию "08.03 Использование Yandex Cloud" 
+duq3r/mnt-ci-ansible-HW/08-ansible-03-yandex-lighthouse/
 
 ## Подготовка к выполнению
 

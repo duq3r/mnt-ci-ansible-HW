@@ -58,7 +58,7 @@
   ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
   register: create_db
   failed_when: create_db.rc != 82 and create_db.rc != 0 
-  changed_when: create_db.stdout is not search('already exists') and create_db.rc == 0 #or create_db.rc != 82
+  changed_when: create_db.stdout is not search('already exists') and create_db.rc == 0 
 # Создание таблицы для хранения логов одной строкой
 - name: Create table for logs
   ansible.builtin.command: clickhouse-client -q
