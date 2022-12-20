@@ -22,12 +22,12 @@
   pre_tasks:
     - name: Install epel-release | Install Nginx
       become: true
-      yum:
+      ansible.builtin.yum:
         name: epel-release
         state: present
     - name: Install Nginx | Install Nginx
       become: true
-      yum:
+      ansible.builtin.yum:
         name: nginx
         state: present
       notify: Start nginx service
@@ -44,5 +44,5 @@
 
   post_tasks:
     - name: Show connect URL lighthouse
-      debug:
+      ansible.builtin.debug:
         msg: "http://{{ ansible_host }}/#http://{{ hostvars['clickhouse-01'].ansible_host }}:8123/?user={{ clickhouse_user }}"
