@@ -1,5 +1,4 @@
-# Домашнее задание к занятию "8.4 Работа с Roles" dev-17_ansible-04-role-yakovlev_vs
-ansible-04-role
+# Домашнее задание к занятию "8.4 Работа с Roles" 
 
 
 ## Подготовка к выполнению
@@ -68,9 +67,9 @@ roles
 - Шаги 4 - 7 выполнены
 
 8. Ссылки на роли
-  - [vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/vector-role1.git)
-  - [lighthouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master//lighthouse-role1.git)
-  - [clickhouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/clickhouse-role1.git)
+  - [vector-role](https://github.com/duq3r/vector-role.git)
+  - [lighthouse-role](https://github.com/duq3r/lighthouse-role.git)
+  - [clickhouse-role](https://github.com/duq3r/clickhouse-role.git)
 
 9. Переработал
 ```bash
@@ -124,36 +123,105 @@ roles
         msg: "http://{{ ansible_host }}/#http://{{ hostvars['clickhouse-01'].ansible_host }}:8123/?user={{ clickhouse_user }}"
 ```
 
-10. Добавил файл [requirements.yml](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/dev-17_ansible-04-role-yakovlev_vs/blob/main/requirements.yml)
+10. Добавил файл [requirements.yml](https://github.com/duq3r/mnt-ci-ansible-HW/blob/master/08-ansible-04-role/requirements.yml)
 
 
 11. Установил роли
 ```bash
-    root@server1:~/ansible_role# ansible-galaxy install -r requirements.yml -p roles --force
+ > $ ansible-galaxy install -r requirements.yml -p roles 
 Starting galaxy role install process
 - changing role clickhouse-role from v1 to v1
-- extracting clickhouse-role to /root/ansible_role/roles/clickhouse-role
+- extracting clickhouse-role to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/clickhouse-role
 - clickhouse-role (v1) was installed successfully
-- extracting vector-role to /root/ansible_role/roles/vector-role
+- extracting vector-role to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/vector-role
 - vector-role (v1) was installed successfully
-- extracting lighthouse-role to /root/ansible_role/roles/lighthouse-role
+- extracting lighthouse-role to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/lighthouse-role
 - lighthouse-role (v1) was installed successfully
+- changing role clickhouse from 1.11.0 to 1.11.0
+- extracting clickhouse to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/clickhouse
+- clickhouse (1.11.0) was installed successfully
 ```
 
 
 12. Запуск playbook и успешное выполнение.
 ```bash
-root@server1:~/ansible_role# ansible-playbook -i inventory/test.yml site.yml --diff
+> $ ansible-playbook -i inventory/test.yml site.yml --diff
+TASK [clickhouse-role : Delay 5 sec] ******************************************************************************************************************************************
+Pausing for 5 seconds
+(ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+ok: [clickhouse-01]
+
+TASK [clickhouse-role : Create database] **************************************************************************************************************************************
+ok: [clickhouse-01]
+
+TASK [clickhouse-role : Create table for logs] ********************************************************************************************************************************
+ok: [clickhouse-01]
+
+PLAY [Install vector] *********************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************
+ok: [vector-01]
+
+TASK [vector-role : Get Vector distrib] ***************************************************************************************************************************************
+ok: [vector-01]
+
+TASK [vector-role : Install Vector packages] **********************************************************************************************************************************
+ok: [vector-01]
+
+TASK [vector-role : Deploy config Vector] *************************************************************************************************************************************
+ok: [vector-01]
+
+TASK [vector-role : Creates directory] ****************************************************************************************************************************************
+ok: [vector-01]
+
+TASK [vector-role : Create systemd unit Vector] *******************************************************************************************************************************
+ok: [vector-01]
+
+TASK [vector-role : Start Vector service] *************************************************************************************************************************************
+ok: [vector-01]
+
+PLAY [Install lighthouse] *****************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************
+ok: [lighthouse-01]
+
+TASK [Install epel-release | Install Nginx] ***********************************************************************************************************************************
+ok: [lighthouse-01]
+
+TASK [Install Nginx | Install Nginx] ******************************************************************************************************************************************
+ok: [lighthouse-01]
+
+TASK [Create Nginx config | Install Nginx] ************************************************************************************************************************************
+ok: [lighthouse-01]
+
+TASK [lighthouse-role : Install git] ******************************************************************************************************************************************
+ok: [lighthouse-01]
+
+TASK [lighthouse-role : Copy lighthouse rfom git] *****************************************************************************************************************************
+ok: [lighthouse-01]
+
+TASK [lighthouse-role : Create lighthouse config] *****************************************************************************************************************************
+ok: [lighthouse-01]
+
+TASK [Show connect URL lighthouse] ********************************************************************************************************************************************
+ok: [lighthouse-01] => {
+    "msg": "http://158.160.39.242/#http://158.160.45.121:8123/?user=netology"
+}
+
+PLAY RECAP ********************************************************************************************************************************************************************
+clickhouse-01              : ok=8    changed=0    unreachable=0    failed=0    skipped=0    rescued=1    ignored=0   
+lighthouse-01              : ok=8    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vector-01                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
 ```
 
-![](pic/ansible_job.jpg)
 
 ---
 
-  - [playbook](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/dev-17_ansible-04-role-yakovlev_vs/blob/main/site.yml)
-  - [vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/vector-role.git)
-  - [lighthouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master//lighthouse-role.git)
-  - [clickhouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/clickhouse-role.git)
+  - [playbook](https://github.com/duq3r/mnt-ci-ansible-HW/blob/master/08-ansible-04-role/site.yml)
+  - [vector-role](https://github.com/duq3r/vector-role.git)
+  - [lighthouse-role](https://github.com/duq3r//lighthouse-role.git)
+  - [clickhouse-role](https://github.com/duq3r/clickhouse-role.git)
 
 ---
 
