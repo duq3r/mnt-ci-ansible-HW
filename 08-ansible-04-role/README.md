@@ -57,9 +57,9 @@ root@server1:~/ansible_role/roles# ansible-galaxy role init vector-role --force
 - Шаги 4 - 7 выполнены
 
 8. Ссылки на роли
-  - [vector-role](https://github.com/Valdem88/vector-role.git)
-  - [lighthouse-role](https://github.com/Valdem88//lighthouse-role.git)
-  - [clickhouse-role](https://github.com/Valdem88/clickhouse-role.git)
+  - [vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/vector-role1.git)
+  - [lighthouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master//lighthouse-role1.git)
+  - [clickhouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/clickhouse-role1.git)
 
 9. Переработал
 ```bash
@@ -113,7 +113,7 @@ root@server1:~/ansible_role/roles# ansible-galaxy role init vector-role --force
         msg: "http://{{ ansible_host }}/#http://{{ hostvars['clickhouse-01'].ansible_host }}:8123/?user={{ clickhouse_user }}"
 ```
 
-10. Добавил файл [requirements.yml](https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs/blob/main/requirements.yml)
+10. Добавил файл [requirements.yml](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/dev-17_ansible-04-role-yakovlev_vs/blob/main/requirements.yml)
 
 
 11. Установил роли
@@ -139,10 +139,10 @@ root@server1:~/ansible_role# ansible-playbook -i inventory/test.yml site.yml --d
 
 ---
 
-  - [playbook](https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs/blob/main/site.yml)
-  - [vector-role](https://github.com/Valdem88/vector-role.git)
-  - [lighthouse-role](https://github.com/Valdem88//lighthouse-role.git)
-  - [clickhouse-role](https://github.com/Valdem88/clickhouse-role.git)
+  - [playbook](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/dev-17_ansible-04-role-yakovlev_vs/blob/main/site.yml)
+  - [vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/vector-role.git)
+  - [lighthouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master//lighthouse-role.git)
+  - [clickhouse-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/clickhouse-role.git)
 
 ---
 
