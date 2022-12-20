@@ -1,14 +1,14 @@
 ---
   - name: clickhouse-role
-    src: https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/clickhouse-role.git
+    src: https://github.com/duq3r/clickhouse-role.git
     scm: git
     version: "v1"
   - name: vector-role
-    src: https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/vector-role.git
+    src: https://github.com/duq3r/vector-role.git
     scm: git
     version: "v1"
   - name: lighthouse-role
-    src: https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/lighthouse-role.git
+    src: https://github.com/duq3r/lighthouse-role.git
     scm: git
     version: "v1"
   - name: clickhouse-role-Alexey

@@ -39,18 +39,29 @@ ansible-04-role
 
 2. Роль успешно скачалась. 
 ```bash
-root@server1:~/ansible_role# ansible-galaxy install -r requirements.yml -p roles
+ansible-galaxy install -r requirements.yml -p roles                                                                                              
 Starting galaxy role install process
-- extracting clickhouse to /root/ansible_role/roles/clickhouse
+- changing role clickhouse-role from v1 to v1
+- extracting clickhouse-role to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/clickhouse-role
+- clickhouse-role (v1) was installed successfully
+- extracting vector-role to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/vector-role
+- vector-role (v1) was installed successfully
+- extracting lighthouse-role to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/lighthouse-role
+- lighthouse-role (v1) was installed successfully
+- changing role clickhouse from 1.11.0 to 1.11.0
+- extracting clickhouse to /Users/e.madan/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles/clickhouse
 - clickhouse (1.11.0) was installed successfully
+                                                  
 ```
 3. Созданы новые каталоги
 ```bash
-root@server1:~/ansible_role/roles# ansible-galaxy role init clickhouse-role --force
+e.madan@Mac: ~/Documents/DevOps/my-homeworks/mnt-homeworks/08-ansible-04-role/roles
+> $ ansible-galaxy role init clickhouse-role --force   
 - Role clickhouse-role was created successfully
-root@server1:~/ansible_role/roles# ansible-galaxy role init lighthouse-role --force
-- Role lighthouse-role was created successfully
-root@server1:~/ansible_role/roles# ansible-galaxy role init vector-role --force
+roles                                                           
+> $ ansible-galaxy role init lighthouse-role --force
+- Role lighthouse-role was created successfully                                                  
+> $ ansible-galaxy role init vector-role --force
 - Role vector-role was created successfully
 ```
 
