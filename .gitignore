@@ -1,3 +1,4 @@
 .DS_Store
 .idea/
 08-ansible-03-yandex-lighthouse/ansible_yc/terraform/key.json
+08-ansible-03-yandex-lighthouse/ansible_yc/terraform/key 2.json
