@@ -1,0 +1,42 @@
+filebeat.inputs:
+- type: log
+  enabled: false
+  paths:
+    - /var/log/*.log
+- type: filestream
+  enabled: false
+  paths:
+    - /var/log/*.log
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+setup.template.settings:
+  index.number_of_shards: 1
+{% if filebeat_output_destination == "elastic" %}
+{% if filebeat_setup_kibana is true %}
+setup.kibana:
+  host: {{ filebeat_kibana_url }}
+{% endif %}
+output.elasticsearch:
+  hosts: {{ filebeat_elasticsearch_url }}
+  username: "admin"
+  password: "elasticadmin"
+{% elif filebeat_output_destination == "logstash" %}
+output.logstash:
+  hosts: {{ filebeat_logstash_url }}
+{% endif %}
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~

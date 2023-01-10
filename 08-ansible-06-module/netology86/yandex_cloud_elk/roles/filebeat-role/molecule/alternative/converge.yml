@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  # На этом этапе Кибаны не будет, она понадобится на этапе Verify
+  vars:
+    filebeat_setup_kibana: false
+  tasks:
+    - name: "Include filebeat-role"
+      include_role:
+        name: "filebeat-role"

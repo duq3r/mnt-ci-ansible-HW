@@ -1,0 +1,33 @@
+$ ansible-playbook -i yc_inventory.yml playbook_with_dynamic_inventory.yml
+[DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the controller starting with Ansible 2.12. Current version: 3.7.3 (default, Jan 22 2021, 20:04:44) [GCC 8.3.0]. This feature will be removed
+from ansible-core in version 2.12. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+
+PLAY [Create instance] ******************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ******************************************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Create new Yandex Cloud Compute instance] *****************************************************************************************************************************************************************
+changed: [localhost]
+
+TASK [Refresh Inventory] ****************************************************************************************************************************************************************************************
+
+PLAY RECAP ******************************************************************************************************************************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+$ ansible-playbook -i yc_inventory.yml playbook_with_dynamic_inventory.yml
+[DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the controller starting with Ansible 2.12. Current version: 3.7.3 (default, Jan 22 2021, 20:04:44) [GCC 8.3.0]. This feature will be removed
+from ansible-core in version 2.12. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+
+PLAY [Create instance] ******************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ******************************************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Create new Yandex Cloud Compute instance] *****************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Refresh Inventory] ****************************************************************************************************************************************************************************************
+
+PLAY RECAP ******************************************************************************************************************************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0

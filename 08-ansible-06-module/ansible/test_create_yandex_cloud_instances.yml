@@ -1,0 +1,7 @@
+---
+- name: Test module my_own_module
+  hosts: localhost
+  tasks:
+    - name: Testing
+      yc_create_instance:
+        network_interface: "net-ru-central1-a"

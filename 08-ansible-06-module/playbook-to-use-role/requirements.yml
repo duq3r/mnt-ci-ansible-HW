@@ -1,0 +1,5 @@
+collections:
+  - name: git@github.com:run0ut/my_own_collection.git
+    type: git
+    version: main
+

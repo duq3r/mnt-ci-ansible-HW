@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+export FB_HOME={{ filebeat_home }}
+export FB_PATH_CONF="{{ filebeat_home }}"
+export PATH=$PATH:$FB_HOME/
+kill $(pgrep filebeat) 2> /dev/null
+set -m
+$FB_HOME/filebeat -c {{ filebeat_home }}/filebeat.yml &
+fg %1

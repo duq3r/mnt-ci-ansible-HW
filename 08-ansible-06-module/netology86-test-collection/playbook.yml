@@ -1,0 +1,8 @@
+---
+  - name: Test module my_own_module
+    hosts: localhost
+    tasks:
+      - name: Testing my_own_module
+        netology86.yandex_cloud_elk.yc_create_instance:
+          path: "{{ file_path }}"
+          content: "{{ file_content }}"

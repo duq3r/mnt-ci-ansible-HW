@@ -1,0 +1,8 @@
+path.data: {{ elasticsearch_home }}
+path.logs: {{ elasticsearch_logs }}
+network.host: 0.0.0.0
+discovery.seed_hosts: ["{{ ansible_facts['default_ipv4']['address'] | default('0.0.0.0') }}"]
+node.name: node-a
+cluster.initial_master_nodes: 
+   - node-a
+

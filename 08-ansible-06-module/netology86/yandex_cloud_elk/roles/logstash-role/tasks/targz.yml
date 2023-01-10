@@ -1,0 +1,98 @@
+---
+- name: Install iproute2 on ubuntu to gather facts properly
+  # https://stackoverflow.com/questions/41469740/ansible-default-ipv4-address-undefined-in-docker-ubuntu
+  block:
+    - name: install iproute
+      apt:
+        name: iproute2
+        state: present
+    - name: Recollect facts
+      ansible.builtin.setup:
+        gather_subset:
+          - all
+    - debug: msg="{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] }}"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Logstash on Docker
+  block:
+
+    - name: Get Logstash tar.gz
+      get_url:
+        # Forbidden 403
+        # url: https://artifacts.elastic.co/downloads/logstash/logstash-{{ logstash_version }}-linux-x86_64.tar.gz
+        url: https://ntl.run0ut.ru/logstash-{{ logstash_version }}-linux-x86_64.tar.gz
+        dest: "files/logstash-{{ logstash_version }}-linux-x86_64.tar.gz"
+        mode: 0755
+        validate_certs: false
+      changed_when: false
+      delegate_to: localhost
+      register: get_elasticsearch
+      until: get_elasticsearch is succeeded
+    - name: Copy Logstash to manage host
+      copy:
+        src: "files/logstash-{{ logstash_version }}-linux-x86_64.tar.gz"
+        mode: 0755
+        dest: "/tmp/logstash-{{ logstash_version }}-linux-x86_64.tar.gz"
+
+    - name: Create directrory for Logstash
+      become: true
+      file:
+        state: directory
+        path: "{{ logstash_home }}"
+        mode: 0755
+
+    - name: Extract Logstash in the installation directory
+      become: true
+      unarchive:
+        copy: false
+        src: "/tmp/logstash-{{ logstash_version }}-linux-x86_64.tar.gz"
+        dest: "{{ logstash_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ logstash_home }}/bin/logstash"
+
+    - name: Create java options directory
+      file:
+        state: directory
+        mode: 0755
+        path: "{{ item }}"
+      loop:
+        - "{{ logstash_configs }}/jvm.options.d"
+
+    - name: Configure JVM options
+      become: true
+      template:
+        src: "jvm.options.j2"
+        dest: "{{ logstash_configs }}/jvm.options.d/jvm.options"
+        mode: 0644
+
+    - name: Create Logstash configuration files.
+      become: true
+      template:
+        src: "{{ item }}.j2"
+        dest: "{{ logstash_configs }}/{{ item }}"
+        mode: 0644
+      with_items:
+        - simple_config.conf
+        - pipelines.yml
+        - startup.options
+
+    - name: Set environment Logstash
+      become: true
+      template:
+        src: templates/logstash.sh.j2
+        dest: /etc/profile.d/logstash.sh
+        mode: 0755
+
+    - name: start Logstash binary
+      block:
+      - name: try start Logstash binary in Docker
+        shell:
+          cmd: docker exec -d -it {{ ansible_nodename }} bash /etc/profile.d/logstash.sh
+        changed_when: false
+        delegate_to: 127.0.0.1
+      rescue:
+      - name: try start Logstash binary in Podman
+        shell:
+          cmd: podman exec -d -it {{ ansible_nodename }} bash /etc/profile.d/logstash.sh
+        changed_when: false
+        delegate_to: 127.0.0.1

@@ -1,0 +1,26 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: test message
+      debug: msg="Hellow, Netology!"
+
+    # Не работает в контейнере, ошибка:
+    # The error was: OSError: [Errno 16] Device or resource busy
+    - name: Fix utsns
+      become: true 
+      lineinfile:
+        path: /etc/containers/containers.conf
+        regexp: '^utsns="host"'
+        line: 'utsns="private"'
+      delegate_to: 127.0.0.1
+
+    # Не работает в контейнере, ошибка:
+    # The error was: OSError: [Errno 16] Device or resource busy
+    - name: copy containers file
+      copy: 
+        src: containers.conf
+        dest: /etc/containers/containers.conf
+      delegate_to: 127.0.0.1

@@ -1,0 +1,4 @@
+FILES.json
+MANIFEST.json
+**/**/__pycache__
+*.swp

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+export LOGSTASH_HOME={{ logstash_home }}
+export LS_HOME={{ logstash_home }}
+export PATH=$PATH:$LS_HOME/bin
+kill $(pgrep logstash) 2> /dev/null
+set -m
+bash $LS_HOME/bin/logstash &
+fg %1

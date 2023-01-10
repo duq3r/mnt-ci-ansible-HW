@@ -1,0 +1,18 @@
+namespace: netology86
+name: yandex_cloud_elk
+version: 1.0.0
+readme: README.md
+authors:
+- Sergey shadurskiy <s.shadurskiy@gmail.com>
+description: Simple collection made as a home assignment
+license:
+- MIT
+license_file: ''
+tags: []
+dependencies: {}
+repository: https://github.com/run0ut/my_own_collection
+documentation: None
+homepage: None
+issues: None
+build_ignore: []
+

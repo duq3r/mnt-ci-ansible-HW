@@ -1,0 +1,4 @@
+---
+# defaults file for netology86-role
+file_path: "~/my_file.txt"
+file_content: "Testing role content"

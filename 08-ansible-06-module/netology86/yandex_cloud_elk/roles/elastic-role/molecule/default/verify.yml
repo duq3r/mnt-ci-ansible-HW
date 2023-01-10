@@ -1,0 +1,13 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+
+    - name: test elastic web
+      uri:
+        url: "http://{{ ansible_nodename }}:9200"
+        status_code: 
+          - 200
+        return_content: yes
+      register: curl_elastic

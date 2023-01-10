@@ -27,13 +27,18 @@
 2. Текст с `{ "message": "Already started" }` на `{ "message": "Running"}`
 3. Issue поставить label: feature
 
+![image](pics/1.png)
+
 ### Developer
 
 Вам пришел новый Issue на доработку, вам необходимо:
 1. Создать отдельную ветку, связанную с этим issue
 2. Внести изменения по тексту из задания
-3. Подготовить Merge Requst, влить необходимые изменения в `master`, проверить, что сборка прошла успешно
+3. Подготовить Merge Request, влить необходимые изменения в `main`, проверить, что сборка прошла успешно
 
+![image](pics/2.png)
+
+![image](pics/5.png)
 
 ### Tester
 
@@ -41,13 +46,31 @@
 1. Поднять докер-контейнер с образом `python-api:latest` и проверить возврат метода на корректность
 2. Закрыть Issue с комментарием об успешности прохождения, указав желаемый результат и фактически достигнутый
 
+![image](pics/4.png)
+
+![image](pics/3.png)
+
 ## Итог
 
 После успешного прохождения всех ролей - отправьте ссылку на ваш проект в гитлаб, как решение домашнего задания
 
+[Gitlab репозиторий с netology-app c полным CI/CD](https://gitlab.com/duker1/netology-app)
+
 ## Необязательная часть
 
 Автомазируйте работу тестировщика, пусть у вас будет отдельный конвейер, который автоматически поднимает контейнер и выполняет проверку, например, при помощи curl. На основе вывода - будет приниматься решение об успешности прохождения тестирования
+
+```bash
+test:
+  stage: test
+  script:
+    - docker pull $CI_REGISTRY/duker1/netology-app #:${GIT_TAG}
+    - docker run -d --name app-test -p 5290:5290 $CI_REGISTRY/duker1/netology-app #:${GIT_TAG}
+    - sleep 15
+    - docker exec app-test curl -s http://127.0.0.1:5290/get_info | grep "Already started" && echo "Test succeeded"
+  rules:
+    - if: ('$CI_COMMIT_BRANCH == "main"')
+```
 
 ---
 

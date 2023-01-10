@@ -1,0 +1,23 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: get elastic
+      include_role:
+        name: "elastic-role"
+    - name: get kibana
+      include_role:
+        name: "kibana-role"
+
+    - name: test kibana web
+      uri:
+        url: "http://{{ ansible_nodename }}:5601/app/home"
+        status_code:
+          - 200
+          - 302
+        return_content: yes
+      register: curl_kibana
+      until: curl_kibana.status in [200,302]
+      retries: 10
+      delay: 60

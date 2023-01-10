@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+export ES_HOME={{ elasticsearch_home }}
+export ES_PATH_CONF="{{ elasticsearch_home }}/config"
+export PATH=$PATH:$ES_HOME/bin
+kill $(pgrep elasticsearch) 2> /dev/null
+set -m
+bash $ES_HOME/bin/elasticsearch &
+fg %1

@@ -1,0 +1,8 @@
+---
+filebeat_version: "7.14.0"
+filebeat_home: "/opt/filebeat/{{ filebeat_version }}"
+filebeat_elasticsearch_url: "http://localhost:9200"
+filebeat_kibana_url:  "http://localhost:5601"
+filebeat_logstash_url: "localhost:5044"
+filebeat_output_destination: "elastic"
+filebeat_setup_kibana: true

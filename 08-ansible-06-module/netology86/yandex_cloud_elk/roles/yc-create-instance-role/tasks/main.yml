@@ -1,0 +1,18 @@
+---
+# tasks file for netology86-yc-role
+---
+# tasks file for netology86-role
+- name: Create Yandex Cloud compute instance
+  yc_create_instance:
+    network_interface: "{{ network_interface }}"
+    name: "{{ name }}"
+    hostname: "{{ hostname }}"
+    network_interface: "{{ network_interface }}"
+    zone: "{{ zone }}"
+    ssh_key: "{{ ssh_key }}"
+    cores: "{{ cores }}"
+    core_fraction: "{{ core_fraction }}"
+    memory: "{{ memory }}"
+    platform: "{{ platform }}"
+    image_family: "{{ image_family }}"
+    boot_disk_size: "{{ boot_disk_size }}"

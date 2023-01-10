@@ -1,0 +1,7 @@
+---
+- name: restart Filebeat
+  become: true
+  service:
+    name: filebeat
+    state: restarted
+  tags: filebeat

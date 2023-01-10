@@ -1,0 +1,69 @@
+---
+- name: Verify
+  hosts: all
+  vars:
+    filebeat_setup_kibana: true
+    filebeat_version: "7.14.0"
+  gather_facts: true
+  tasks:
+
+    ### Развернёт 2/3 ELK стека и настроит дешборды в Кибане
+    - name: get elastic
+      include_role:
+        name: "elastic-role"
+    - name: get kibana
+      include_role:
+        name: "kibana-role"
+    - name: apply filebeat-role to setup kibana dashboards
+      include_role:
+        name: "filebeat-role"
+
+    ### Проверка, что веб функционирует корректно. 
+    ### Могут быть редиректы, считаем что это ок.
+    - name: test elastic web
+      uri:
+        url: "http://{{ ansible_nodename }}:9200/_cat/indices?v"
+        status_code: 
+          - 200
+          - 302
+        follow_redirects: safe
+        return_content: yes
+      register: curl_elastic
+
+    - name: test kibana web
+      uri:
+        url: "http://{{ ansible_nodename }}:5601/app/home"
+        status_code:
+          - 200
+          - 302
+        follow_redirects: safe
+        return_content: yes
+      register: curl_kibana
+      until: curl_kibana.status in [200,302]
+      retries: 10
+      delay: 60
+
+    ### Проверит, что процесс Файлбит запущен и выведет ID
+    - name: check filebeat is running
+      shell:
+        cmd: docker exec {{ ansible_nodename }} pgrep filebeat
+      register: filebeat_running
+      changed_when: false
+      delegate_to: 127.0.0.1
+
+    - name: print what docker exec returned 
+      debug: msg="filebeat process id = {{ filebeat_running.stdout }}"
+
+    ### Проверка, что в Эластике есть индекс сданными от Файлбита
+    - name: check filebeat index exists
+      uri:
+        url: "http://{{ ansible_nodename }}:9200/_cat/indices/filebeat-{{ filebeat_version }}-*?format=json"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: elastic_filebeat_index
+
+    ### Покажет количество документов (=данных) в индексе или упадёт, если их нет.
+    - name: checkif index not empty
+      debug: msg="number of documents in filebeat index = {{ elastic_filebeat_index.json[0]['docs.count'] }}"
+      failed_when: elastic_filebeat_index.json[0]['docs.count'] == "0"

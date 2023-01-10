@@ -1,0 +1,6 @@
+---
+- name: restart Elasticsearch systemd
+  become: true
+  service:
+    name: elasticsearch
+    state: restarted

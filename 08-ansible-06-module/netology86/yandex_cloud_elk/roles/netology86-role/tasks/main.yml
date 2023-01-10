@@ -1,0 +1,6 @@
+---
+# tasks file for netology86-role
+- name: Testing
+  my_own_module:
+    path: "{{ file_path }}"
+    content: "{{ file_content }}"

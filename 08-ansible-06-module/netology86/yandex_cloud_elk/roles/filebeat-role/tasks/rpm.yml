@@ -1,0 +1,64 @@
+---
+- name: "Download Filebeat's rpm"
+  get_url:
+    # url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-{{ filebeat_version }}-x86_64.rpm"
+    url: "https://ntl.run0ut.ru/cicd/filebeat-{{ filebeat_version }}-x86_64.rpm"
+    dest: "/tmp/filebeat-{{ filebeat_version }}-x86_64.rpm"
+  register: download_filebeat
+  until: download_filebeat is succeeded
+
+- name: Install Filebeat
+  block:
+    - name: Install latest Filebeat
+      become: true
+      yum:
+        name: "/tmp/filebeat-{{ filebeat_version }}-x86_64.rpm"
+        state: latest
+  rescue:
+    - name: Uninstall Filebeat
+      become: true
+      yum:
+        name: "logstash"
+        state: removed
+    - name: Reinstall Filebeat
+      become: true
+      yum:
+        name: "/tmp/filebeat-{{ filebeat_version }}-x86_64.rpm"
+        state: present
+
+- name: Configure Filebeat
+  become: true
+  vars:
+    - filebeat_home: "/usr/share/filebeat"
+  template:
+    src: filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+    mode: 0644
+  notify: restart Filebeat
+
+- name: Enable and configure the system module
+  become: true
+  command:
+    cmd: filebeat modules enable system
+    chdir: /usr/share/filebeat/bin
+  register: filebeat_modules
+  changed_when: filebeat_modules.stdout != 'Module system is already enabled'
+  notify: restart Filebeat
+
+- name: Load Kibana dashboards
+  when:
+    - filebeat_output_destination == "elastic"
+    - filebeat_setup_kibana is true
+  become: true
+  command:
+    cmd: filebeat setup
+    chdir: /usr/share/filebeat/bin
+  register: filebeat_setup
+  notify: restart Filebeat
+  changed_when: false
+  until: filebeat_setup is succeeded
+  delay: 40
+
+- name: Flush handlers
+  meta: flush_handlers
+

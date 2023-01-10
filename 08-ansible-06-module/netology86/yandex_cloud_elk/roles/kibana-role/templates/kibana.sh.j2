@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+export KIBANA_HOME={{ kibana_home }}
+export PATH=$PATH:$KIBANA_HOME/bin
+kill $(pgrep kibana) 2> /dev/null
+set -m
+bash $KIBANA_HOME/bin/kibana --allow-root &
+fg %1

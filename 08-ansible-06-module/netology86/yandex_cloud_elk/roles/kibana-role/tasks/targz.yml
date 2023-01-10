@@ -1,0 +1,80 @@
+---
+- name: Install iproute2 on ubuntu to gather facts properly
+  # https://stackoverflow.com/questions/41469740/ansible-default-ipv4-address-undefined-in-docker-ubuntu
+  block:
+    - name: install iproute
+      apt:
+        name: iproute2
+        state: present
+    - name: Recollect facts
+      ansible.builtin.setup:
+        gather_subset:
+          - all
+    - debug: msg="{{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] }}"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Kibana on Docker
+  block:
+
+    - name: Get Kibana tar.gz
+      get_url:
+        # Forbidden 403
+        # url: https://artifacts.elastic.co/downloads/kibana/kibana-{{ kibana_version }}-linux-x86_64.tar.gz
+        url: https://ntl.run0ut.ru/kibana-{{ kibana_version }}-linux-x86_64.tar.gz
+        dest: "files/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+        mode: 0755
+        validate_certs: false
+      changed_when: false
+      delegate_to: localhost
+      register: get_elasticsearch
+      until: get_elasticsearch is succeeded
+    - name: Copy Elasticsearch to manage host
+      copy:
+        src: "files/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+        mode: 0755
+        dest: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+
+    - name: Create directrory for Kibana
+      become: true
+      file:
+        state: directory
+        path: "{{ kibana_home }}"
+        mode: 0755
+
+    - name: Extract Kibana in the installation directory
+      become: true
+      unarchive:
+        copy: false
+        src: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+        dest: "{{ kibana_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ kibana_home }}/bin/kibana"
+
+    - name: Configure Kibana
+      become: true
+      template:
+        src: kibana.yml.j2
+        dest: "{{ kibana_home }}/config//kibana.yml"
+        mode: 0644
+
+    - name: Set environment Kibana
+      become: true
+      template:
+        src: templates/kibana.sh.j2
+        dest: /etc/profile.d/kibana.sh
+        mode: 0755
+
+    - name: start Kibana binary
+      block:
+      - name: try start Kibana binary in Docker
+        shell:
+          cmd: docker exec -d -it {{ ansible_nodename }} bash /etc/profile.d/kibana.sh
+        changed_when: false
+        delegate_to: 127.0.0.1
+      rescue:
+      - name: try start Kibana binary in Podman
+        shell:
+          cmd: podman exec -d -it {{ ansible_nodename }} bash /etc/profile.d/kibana.sh
+        changed_when: false
+        delegate_to: 127.0.0.1
+

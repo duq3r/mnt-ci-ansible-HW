@@ -1,0 +1,10 @@
+---
+  - name: Example playbook
+    hosts: localhost
+    collections:
+      - netology86.yandex_cloud_elk
+    vars:
+      - file_path: "./file.txt"
+      - file_content: "Simple text"
+    roles:
+      - netology86-role

@@ -1,0 +1,28 @@
+---
+- name: Recollect facts
+  ansible.builtin.setup:
+    gather_subset:
+      - all
+  register: debug_facts
+
+# - name: print ansible_facts
+#   debug: msg="{{ ansible_facts }}"
+
+# - name: print recollected facts
+#   debug: msg="{{ debug_facts }}"
+
+# - name: print some fact
+#   debug: msg="{{ debug_facts.ansible_facts.ansible_virtualization_type }}"
+
+# - name: print some fact 2
+#   debug: msg="{{ debug_facts.ansible_facts.ansible_env.container }}"
+
+- name: "Download Elasticsearch's rpm"
+  when: ansible_facts.virtualization_type != "docker"
+  include: rpm.yml
+
+- name: Install Elasticsearch tar.gz (on Docker)
+  when: ( ansible_facts.virtualization_type == "docker" )
+        # or ( ansible_facts.env.container == "podman" )
+        # or ( ansible_connection == "community.docker.docker" )
+  include: targz.yml

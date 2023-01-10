@@ -1,0 +1,35 @@
+$ ansible-playbook test_my_own_module.yml
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible engine, or trying out features under development. This is a rapidly
+changing source of code and can become unstable at any point.
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [Test module my_own_module] ********************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ******************************************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Testing] **************************************************************************************************************************************************************************************************
+changed: [localhost]
+
+PLAY RECAP ******************************************************************************************************************************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+$ cat my_test_file.txt
+Testing playbook content
+$ ansible-playbook test_my_own_module.yml
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible engine, or trying out features under development. This is a rapidly
+changing source of code and can become unstable at any point.
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [Test module my_own_module] ********************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ******************************************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Testing] **************************************************************************************************************************************************************************************************
+ok: [localhost]
+
+PLAY RECAP ******************************************************************************************************************************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0

@@ -1,0 +1,65 @@
+---
+- name: "Download Elasticsearch's rpm"
+  get_url:
+    # Forbidden 403
+    # url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_version }}-x86_64.rpm"
+    url: "https://ntl.run0ut.ru/cicd/elasticsearch-{{ elasticsearch_version }}-x86_64.rpm"
+    dest: "/tmp/elasticsearch-{{ elasticsearch_version }}-x86_64.rpm"
+  register: download_elasticsearch
+  until: download_elasticsearch is succeeded
+
+- name: Install Elasticsearch RPM
+  block:
+    - name: Install latest Elasticsearch
+      become: true
+      yum:
+        name: "/tmp/elasticsearch-{{ elasticsearch_version }}-x86_64.rpm"
+        state: latest
+  rescue:
+    - name: Uninstall Elasticsearch
+      become: true
+      yum:
+        name: "elasticsearch"
+        state: removed
+    - name: Reinstall Elasticsearch
+      become: true
+      yum:
+        name: "/tmp/elasticsearch-{{ elasticsearch_version }}-x86_64.rpm"
+        state: present
+
+- name: Create Elasticsearch group
+  group:
+    name: elasticsearch
+    state: present
+  notify: restart Elasticsearch systemd
+
+- name: Create Elasticsearch user
+  user:
+    name: elasticsearch
+    group: elasticsearch
+  notify: restart Elasticsearch systemd
+
+- name: Give Elasticsearch access to nodes path
+  file:
+    path: /usr/share/elasticsearch/nodes
+    owner: elasticsearch
+    group: elasticsearch
+    mode: '0755'
+    state: directory
+  notify: restart Elasticsearch systemd
+
+- name: Configure Elasticsearch and JVM
+  become: true
+  vars:
+    - elasticsearch_home: "/usr/share/elasticsearch"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+  loop:
+    - { src: "elasticsearch.yml.j2" , dest: "/etc/elasticsearch/elasticsearch.yml" }
+    - { src: "jvm.options.j2" , dest: "/etc/elasticsearch/jvm.options" }
+  notify: restart Elasticsearch systemd
+
+- name: Flush handlers
+  meta: flush_handlers

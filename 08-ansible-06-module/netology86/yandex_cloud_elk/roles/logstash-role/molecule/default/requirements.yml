@@ -1,0 +1,10 @@
+---
+  - src: git@github.com:run0ut/kibana-role.git
+    scm: git
+    version: main
+  - src: git@github.com:run0ut/elastic-role.git
+    scm: git
+    version: main
+  - src: git@github.com:run0ut/filebeat-role.git
+    scm: git
+    version: main

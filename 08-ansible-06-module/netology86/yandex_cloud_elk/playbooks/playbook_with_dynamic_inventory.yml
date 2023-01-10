@@ -1,0 +1,120 @@
+---
+- name: Create instance
+  hosts: localhost
+  tasks:
+    - name: Create new Yandex Cloud Compute instance
+      netology86.yandex_cloud_elk.yc_create_instance:
+        network_interface: "net-ru-central1-a"
+        name: "test-instance"
+        status: "running"
+    - name: Refresh Inventory
+      meta: refresh_inventory
+
+- name: Add new host to inventory
+  hosts: all
+  gather_facts: false
+  user: yc-user
+  tasks:
+    - name: Wait for system to become reachable
+      wait_for_connection:
+        timeout: 100
+
+- name: Install ELK
+  hosts: all
+  collections:
+    - netology86.yandex_cloud_elk
+  user: yc-user
+  become: true
+  tasks:
+    - name: Install Elasticseatch
+      import_role:
+        name: elastic-role
+    - name: Install Kibana
+      import_role:
+        name: kibana-role
+
+    ### Проверка, что веб функционирует корректно. 
+    ### Могут быть редиректы, считаем что это ок.
+    - name: Test elastic web
+      uri:
+        url: "http://{{ ansible_nodename }}:9200/_cat/indices?v"
+        status_code: 
+          - 200
+          - 302
+        follow_redirects: safe
+        return_content: yes
+      until: curl_elastic.status in [200,302]
+      retries: 10100
+      delay: 1
+      register: curl_elastic
+
+    - name: Test kibana web
+      uri:
+        url: "http://{{ ansible_nodename }}:5601/app/home"
+        status_code:
+          - 200
+          - 302
+        follow_redirects: safe
+        return_content: yes
+      register: curl_kibana
+      until: curl_kibana.status in [200,302]
+      retries: 300
+      delay: 1
+
+    - name: Install Filebeat
+      import_role:
+        name: filebeat-role
+
+    ### Проверит, что процесс Файлбит запущен и выведет ID
+    - name: check filebeat is running
+      shell:
+        cmd: pgrep filebeat
+      register: filebeat_running
+      changed_when: false
+
+    - name: print what docker exec returned 
+      debug: msg="filebeat process id = {{ filebeat_running.stdout }}"
+
+    ### Проверка, что в Эластике есть индекс сданными от Файлбита и документов больше 0
+    - name: check filebeat index exists
+      uri:
+        url: "http://{{ ansible_nodename }}:9200/_cat/indices/filebeat-{{ filebeat_version }}-*?format=json"
+        method: GET
+        return_content: yes
+        status_code: 200
+      until: elastic_filebeat_index.json[0]['docs.count'] | int > 0
+      retries: 100
+      delay: 1
+      register: elastic_filebeat_index
+
+    ### Покажет количество документов (=данных) в индексе.
+    - name: Checkif that index not empty
+      debug: msg="number of documents in filebeat index = {{ elastic_filebeat_index.json[0]['docs.count'] }}"
+
+    - name: Install Logstash
+      import_role:
+        name: logstash-role
+
+    - name: Apply filebeat-role to send data to logstash
+      vars:
+        filebeat_output_destination: "logstash"
+      include_role:
+        name: "filebeat-role"
+
+    ### Проверим, что Logstash отвечает адекватно.
+    #### Получим статус
+    - name: Get logstash status
+      uri:
+        url: "http://localhost:9600/?format=json"
+        method: GET
+        return_content: yes
+        status_code: 200
+      until: logstash_status_info.status == 200
+      retries: 100
+      delay: 1
+      register: logstash_status_info
+
+    - name: Checkif logstash status is "green"
+      debug: msg="logstash status is {{ logstash_status_info.json['status'] }}"
+      failed_when: (logstash_status_info.json['status'] != "green") 
+                    and (logstash_status_info.json['status'] != "yellow")

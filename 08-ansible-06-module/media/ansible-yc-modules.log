@@ -1,0 +1,399 @@
+$ ansible-playbook -i yc_inventory.yml playbook_with_dynamic_inventory.yml
+[DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the controller starting with Ansible 2.12. Current version: 3.7.3 (default, Jan 22 2021, 20:04:44) [GCC 8.3.0]. This
+feature will be removed from ansible-core in version 2.12. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [Create instance] *********************************************************************************************************************************************************************
+TASK [Gathering Facts] *********************************************************************************************************************************************************************ok: [localhost]
+
+TASK [Create new Yandex Cloud Compute instance] ********************************************************************************************************************************************ok: [localhost]
+
+TASK [Refresh Inventory] *******************************************************************************************************************************************************************
+PLAY [Add new host to inventory] ***********************************************************************************************************************************************************
+TASK [Wait for system to become reachable] *************************************************************************************************************************************************ok: [test-instance]
+
+PLAY [Install ELK] *************************************************************************************************************************************************************************
+TASK [Gathering Facts] *********************************************************************************************************************************************************************ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Recollect facts] **************************************************************************************************************************ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Download Elasticsearch's rpm] *************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Install latest Elasticsearch] *************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create Elasticsearch group] ***************************************************************************************************************ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create Elasticsearch user] ****************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Give Elasticsearch access to nodes path] **************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Configure Elasticsearch and JVM] **********************************************************************************************************changed: [test-instance] => (item={'src': 'elasticsearch.yml.j2', 'dest': '/etc/elasticsearch/elasticsearch.yml'})
+changed: [test-instance] => (item={'src': 'jvm.options.j2', 'dest': '/etc/elasticsearch/jvm.options'})
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Flush handlers] ***************************************************************************************************************************[WARNING]: flush_handlers task does not support when conditional
+
+RUNNING HANDLER [netology86.yandex_cloud_elk.elastic-role : restart Elasticsearch systemd] *************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : install iproute] **************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Recollect facts] **************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Get Elasticsearch tar.gz] *****************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Copy Elasticsearch to manage host] ********************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create directrory for Elasticsearch] ******************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Extract Elasticsearch in the installation directory] **************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Configure Elasticsearch] ******************************************************************************************************************skipping: [test-instance] => (item={'src': 'elasticsearch.yml.j2', 'dest': '/opt/elasticsearch/7.14.0/config/elasticsearch.yml'})
+skipping: [test-instance] => (item={'src': 'jvm.options.j2', 'dest': '/opt/elasticsearch/7.14.0/config/jvm.options'})
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Set environment Elasticsearch] ************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create group] *****************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create user] ******************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create directories] ***********************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Set permissions] **************************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : restart Elasticsearch binary on docker] ***************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Download Kibana's rpm] *********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Install latest Kibana] *********************************************************************************************************************
+TASK [netology86.yandex_cloud_elk.elastic-role : Set environment Elasticsearch] ************************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create group] *****************************************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create user] ******************************************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create directories] ***********************************************************************************************************************
+skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Set permissions] **************************************************************************************************************************
+skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : restart Elasticsearch binary on docker] ***************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Download Kibana's rpm] *********************************************************************************************************************
+changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Install latest Kibana] *********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create group] *****************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create user] ******************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create directories] ***********************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Set permissions] **************************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : restart Elasticsearch binary on docker] ***************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Download Kibana's rpm] *********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Install latest Kibana] *********************************************************************************************************************
+TASK [netology86.yandex_cloud_elk.elastic-role : Create group] *****************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create user] ******************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create directories] ***********************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Set permissions] **************************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : restart Elasticsearch binary on docker] ***************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Download Kibana's rpm] *********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Install latest Kibana] *********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create group] *****************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create user] ******************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create directories] ***********************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Set permissions] **************************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : restart Elasticsearch binary on docker] ***************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Download Kibana's rpm] *********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Install latest Kibana] *********************************************************************************************************************
+TASK [netology86.yandex_cloud_elk.elastic-role : Create group] *****************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create user] ******************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Create directories] ***********************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : Set permissions] **************************************************************************************************************************skipping: [test-instance] => (item=/var/log/elasticsearch)
+skipping: [test-instance] => (item=/opt/elasticsearch/7.14.0)
+
+TASK [netology86.yandex_cloud_elk.elastic-role : restart Elasticsearch binary on docker] ***************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Download Kibana's rpm] *********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Install latest Kibana] *********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Configure Kibana] **************************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Flush handlers] ****************************************************************************************************************************
+RUNNING HANDLER [netology86.yandex_cloud_elk.kibana-role : restart Kibana systemd] *********************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : install iproute] ***************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Recollect facts] ***************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : debug] *************************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Get Kibana tar.gz] *************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Copy Elasticsearch to manage host] *********************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Create directrory for Kibana] **************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Extract Kibana in the installation directory] **********************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Configure Kibana] **************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : Set environment Kibana] ********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.kibana-role : try start Kibana binary in Docker] *********************************************************************************************************skipping: [test-instance]
+
+TASK [Test elastic web] ********************************************************************************************************************************************************************ok: [test-instance]
+
+TASK [Test kibana web] *********************************************************************************************************************************************************************FAILED - RETRYING: Test kibana web (300 retries left).
+FAILED - RETRYING: Test kibana web (299 retries left).
+FAILED - RETRYING: Test kibana web (298 retries left).
+FAILED - RETRYING: Test kibana web (297 retries left).
+ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Download Filebeat's rpm] *****************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Install latest Filebeat] *****************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Configure Filebeat] **********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the system module] **************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Load Kibana dashboards] ******************************************************************************************************************ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Flush handlers] **************************************************************************************************************************
+RUNNING HANDLER [netology86.yandex_cloud_elk.filebeat-role : restart Filebeat] *************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : install iproute] *************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Recollect facts] *************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Get Filebeat tar.gz] *********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Copy Filebeat to manage host] ************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Create directrory for Filebeat] **********************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Extract Filebeat in the installation directory] ******************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Configure Filebeat] **********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Set environment Filebeat] ****************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the system module] **************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the elasticsearch module] *******************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : restart Filebeat binary on Docker] *******************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Load Kibana dashboards] ******************************************************************************************************************skipping: [test-instance]
+
+TASK [check filebeat is running] ***********************************************************************************************************************************************************ok: [test-instance]
+
+TASK [print what docker exec returned] *****************************************************************************************************************************************************ok: [test-instance] => {
+    "msg": "filebeat process id = 10211"
+}
+
+TASK [check filebeat index exists] *********************************************************************************************************************************************************FAILED - RETRYING: check filebeat index exists (100 retries left).
+FAILED - RETRYING: check filebeat index exists (99 retries left).
+ok: [test-instance]
+
+TASK [Checkif that index not empty] ********************************************************************************************************************************************************ok: [test-instance] => {
+    "msg": "number of documents in filebeat index = 50"
+}
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Download Logstash's rpm] *****************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Ensure Java is installed.] ***************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Install Logstash] ************************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Configure startup options] ***************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Configure JVM options] *******************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Create startup scripts] ******************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Create Logstash configuration files.] ****************************************************************************************************changed: [test-instance] => (item=simple_config.conf)
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Flush handlers] **************************************************************************************************************************
+RUNNING HANDLER [netology86.yandex_cloud_elk.logstash-role : restart Logstash] *************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : install iproute] *************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Recollect facts] *************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : debug] ***********************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Get Logstash tar.gz] *********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Copy Logstash to manage host] ************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Create directrory for Logstash] **********************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Extract Logstash in the installation directory] ******************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Create java options directory] ***********************************************************************************************************skipping: [test-instance] => (item=/opt/logstash/7.14.0/config/jvm.options.d)
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Configure JVM options] *******************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Create Logstash configuration files.] ****************************************************************************************************skipping: [test-instance] => (item=simple_config.conf)
+skipping: [test-instance] => (item=pipelines.yml)
+skipping: [test-instance] => (item=startup.options)
+
+TASK [netology86.yandex_cloud_elk.logstash-role : Set environment Logstash] ****************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.logstash-role : try start Logstash binary in Docker] *****************************************************************************************************skipping: [test-instance]
+
+TASK [Apply filebeat-role to send data to logstash] ****************************************************************************************************************************************
+TASK [netology86.yandex_cloud_elk.filebeat-role : Download Filebeat's rpm] *****************************************************************************************************************ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Install latest Filebeat] *****************************************************************************************************************ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Configure Filebeat] **********************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the system module] **************************************************************************************************ok: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Load Kibana dashboards] ******************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Flush handlers] **************************************************************************************************************************
+RUNNING HANDLER [netology86.yandex_cloud_elk.filebeat-role : restart Filebeat] *************************************************************************************************************changed: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : install iproute] *************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Recollect facts] *************************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Get Filebeat tar.gz] *********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Copy Filebeat to manage host] ************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Create directrory for Filebeat] **********************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Extract Filebeat in the installation directory] ******************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Configure Filebeat] **********************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Set environment Filebeat] ****************************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the system module] **************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the elasticsearch module] *******************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : restart Filebeat binary on Docker] *******************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Load Kibana dashboards] ******************************************************************************************************************skipping: [test-instance]
+
+TASK [Get logstash status] *****************************************************************************************************************************************************************FAILED - RETRYING: Get logstash status (100 retries left).
+FAILED - RETRYING: Get logstash status (99 retries left).
+FAILED - RETRYING: Get logstash status (98 retries left).
+ok: [test-instance]
+
+TASK [Checkif logstash status is "green"] **************************************************************************************************************************************************ok: [test-instance] => {
+    "msg": "logstash status is green"
+}
+
+PLAY RECAP *********************************************************************************************************************************************************************************localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+test-instance              : ok=41   changed=25   unreachable=0    failed=0    skipped=60   rescued=0    ignored=0
+
+23:31:26 ~ sergey@Netangels-CSVM:~/git/devops-netology/03-mnt-homeworks/08-ansible-06-module/netology86-test-collection (main *+=)
+$
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : restart Filebeat binary on Docker] *******************************************************************************************************skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Load Kibana dashboards] ******************************************************************************************************************skipping: [test-instance]
+
+TASK [Get logstash status] *****************************************************************************************************************************************************************FAILED - RETRYING: Get logstash status (100 retries left).
+FAILED - RETRYING: Get logstash status (99 retries left).
+FAILED - RETRYING: Get logstash status (98 retries left).
+ok: [test-instance]
+
+TASK [Checkif logstash status is "green"] **************************************************************************************************************************************************ok: [test-instance] => {
+    "msg": "logstash status is green"
+}
+
+PLAY RECAP *********************************************************************************************************************************************************************************localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+test-instance              : ok=41   changed=25   unreachable=0    failed=0    skipped=60   rescued=0    ignored=0
+
+23:31:26 ~ sergey@Netangels-CSVM:~/git/devops-netology/03-mnt-homeworks/08-ansible-06-module/netology86-test-collection (main *+=)
+$
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Get Filebeat tar.gz] *********************************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Copy Filebeat to manage host] ************************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Create directrory for Filebeat] **********************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Extract Filebeat in the installation directory] ******************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Configure Filebeat] **********************************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Set environment Filebeat] ****************************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the system module] **************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Enable and configure the elasticsearch module] *******************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : restart Filebeat binary on Docker] *******************************************************************************************************
+skipping: [test-instance]
+
+TASK [netology86.yandex_cloud_elk.filebeat-role : Load Kibana dashboards] ******************************************************************************************************************
+skipping: [test-instance]
+
+TASK [Get logstash status] *****************************************************************************************************************************************************************
+FAILED - RETRYING: Get logstash status (100 retries left).
+FAILED - RETRYING: Get logstash status (99 retries left).
+FAILED - RETRYING: Get logstash status (98 retries left).
+ok: [test-instance]
+
+TASK [Checkif logstash status is "green"] **************************************************************************************************************************************************
+ok: [test-instance] => {
+    "msg": "logstash status is green"
+}
+
+PLAY RECAP *********************************************************************************************************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+test-instance              : ok=41   changed=25   unreachable=0    failed=0    skipped=60   rescued=0    ignored=0

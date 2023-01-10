@@ -1,0 +1,58 @@
+---
+
+- name: "Download Logstash's rpm"
+  get_url:
+    # url: "https://artifacts.elastic.co/downloads/logstash/logstash-{{ logstash_version }}-x86_64.rpm"
+    url: "https://ntl.run0ut.ru/cicd/logstash-{{ logstash_version }}-x86_64.rpm"
+    dest: "/tmp/logstash-{{ logstash_version }}-x86_64.rpm"
+    mode: 0755
+    validate_certs: false
+  register: get_logstash
+  until: get_logstash is succeeded
+
+- name: Ensure Java is installed.
+  become: true
+  yum:
+    name: "java-1.8.0-openjdk"
+    state: present
+
+- name: Install Logstash
+  become: true
+  yum:
+    name: "/tmp/logstash-{{ logstash_version }}-x86_64.rpm"
+    state: present
+
+- name: Configure startup options
+  become: true
+  vars:
+    - logstash_home: "/usr/share/logstash"
+    - logstash_configs: "/etc/logstash"
+  template:
+    src: "startup.options.j2"
+    dest: "/etc/logstash/startup.options"
+    mode: 0644
+
+- name: Configure JVM options
+  become: true
+  template:
+    src: "jvm.options.j2"
+    dest: "/etc/logstash/jvm.options"
+    mode: 0644
+
+- name: Create startup scripts
+  become: true
+  command:
+    cmd: /usr/share/logstash/bin/system-install /etc/logstash/startup.options systemd
+
+- name: Create Logstash configuration files.
+  become: true
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+    mode: 0644
+  with_items:
+    - simple_config.conf
+  notify: restart Logstash
+
+- name: Flush handlers
+  meta: flush_handlers
