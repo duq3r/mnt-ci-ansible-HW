@@ -18,12 +18,12 @@
 ```yml
 #cloud-config
 users:
-  - name: maxship
+  - name: e.madan
     groups: sudo
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh-authorized-keys:
-      - "ssh-ed25519 <содержимое ключа> m.o.shipitsyn@mail.ru"
+      - "ssh-ed25519 <ssh ключ> iworks"
 ```
 
 Применил конфигурацию:
@@ -70,7 +70,7 @@ $ export PATH=$PATH:$(pwd)
 
 ```sh
 $ sonar-scanner --version
-INFO: Scanner configuration file: /home/maxship/Downloads/sonar-scanner-4.6.2.2472-linux/conf/sonar-scanner.properties
+INFO: Scanner configuration file: /Users/e.madan/Downloads/sonar-scanner-4.6.2.2472-linux/conf/sonar-scanner.properties
 INFO: Project root configuration file: NONE
 INFO: SonarScanner 4.6.2.2472
 INFO: Java 11.0.11 AdoptOpenJDK (64-bit)
@@ -174,7 +174,7 @@ $ sudo ln -s /usr/local/maven/apache-maven-3.8.4/bin/mvn /usr/bin/mvn
 ```sh
 $ mvn --version
 Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537)
-Maven home: /home/maxship/Downloads/apache-maven-3.8.4
+Maven home: /Users/e.madan/Downloads/apache-maven-3.8.4
 Java version: 11.0.13, vendor: Ubuntu, runtime: /usr/lib/jvm/java-11-openjdk-amd64
 Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "5.11.0-43-generic", arch: "amd64", family: "unix"
@@ -224,7 +224,7 @@ $ mvn package
 [INFO] Building simple-app 1.0-SNAPSHOT
 [INFO] --------------------------------[ jar ]---------------------------------
 ...
-[INFO] Building jar: /home/maxship/devops/netology-9.3-cicd/mvn/target/simple-app-1.0-SNAPSHOT.jar
+[INFO] Building jar: /Users/e.madan/devops/netology-9.3-cicd/mvn/target/simple-app-1.0-SNAPSHOT.jar
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
@@ -238,13 +238,13 @@ $ mvn package
 ```sh
 $ ls -la ~/.m2/repository/netology/java/8_282/
 total 560
-drwxrwxr-x 2 maxship maxship   4096 дек 26 18:21 .
-drwxrwxr-x 3 maxship maxship   4096 дек 26 18:21 ..
--rw-rw-r-- 1 maxship maxship 547096 дек 26 18:21 java-8_282-distrib.tar.gz
--rw-rw-r-- 1 maxship maxship     40 дек 26 18:21 java-8_828-distrib.tar.gz.sha1
--rw-rw-r-- 1 maxship maxship    350 дек 26 18:21 java-8_282.pom
--rw-rw-r-- 1 maxship maxship     40 дек 26 18:21 java-8_282.pom.sha1
--rw-rw-r-- 1 maxship maxship    200 дек 26 18:21 _remote.repositories
+drwxrwxr-x 2 e.madan e.madan   4096 дек 26 18:21 .
+drwxrwxr-x 3 e.madan e.madan   4096 дек 26 18:21 ..
+-rw-rw-r-- 1 e.madan e.madan 547096 дек 26 18:21 java-8_282-distrib.tar.gz
+-rw-rw-r-- 1 e.madan e.madan     40 дек 26 18:21 java-8_828-distrib.tar.gz.sha1
+-rw-rw-r-- 1 e.madan e.madan    350 дек 26 18:21 java-8_282.pom
+-rw-rw-r-- 1 e.madan e.madan     40 дек 26 18:21 java-8_282.pom.sha1
+-rw-rw-r-- 1 e.madan e.madan    200 дек 26 18:21 _remote.repositories
 ```
 
 9. В ответе присылаем исправленный файл `pom.xml`
