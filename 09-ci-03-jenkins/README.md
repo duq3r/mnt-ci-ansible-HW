@@ -1555,9 +1555,9 @@ Finished: SUCCESS
 
 - [Vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/vector-role)
 
-- [Declarative Pipeline](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/blob/main/roles/vector-role/Jenkinsfile)
+- [Declarative Pipeline](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/blob/vector-role/Jenkinsfile)
 
-- [Scripted Pipeline](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/blob/main/roles/vector-role/ScriptedJenkinsfile)
+- [Scripted Pipeline](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/blob/vector-role/Scripted/Jenkinsfile)
 
 ## Необязательная часть
 
