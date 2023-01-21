@@ -908,10 +908,6 @@ Finished: SUCCESS
 
 4. Создать Multibranch Pipeline на запуск `Jenkinsfile` из репозитория.
 
-![](pic/Multibranch_Pipeline.jpg)
-
-![](pic/Multibranch_Pipeline1.jpg)
-
 <details><summary>Logs</summary>
 Branch indexing
 12:11:06 Connecting to https://api.github.com using duq3r/****** (git)
@@ -1386,7 +1382,7 @@ Finished: SUCCESS
 </details>
 
 
-5. Создать Scripted Pipeline, наполнить его скриптом из [pipeline](./pipeline).
+1. Создать Scripted Pipeline, наполнить его скриптом из [pipeline](./pipeline).
 
 ![](pic/Scripted_Pipeline.jpg)
 
@@ -1557,7 +1553,7 @@ Finished: SUCCESS
 
 8. Отправить ссылку на репозиторий с ролью и Declarative Pipeline и Scripted Pipeline.
 
-- [Vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/tree/main/roles/vector-role)
+- [Vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/vector-role)
 
 - [Declarative Pipeline](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/blob/main/roles/vector-role/Jenkinsfile)
 
