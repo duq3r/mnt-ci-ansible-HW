@@ -464,7 +464,7 @@ Finished: SUCCESS
 
 ![](pic/DeclarativePipelineJob1.jpg)
 <details><summary>Logs</summary>
-Started by user Яковлев Владимир Сергеевич
+Started by user Мадан Евгений
 [Pipeline] Start of Pipeline
 [Pipeline] node (hide)
 Running on agent-01 in /opt/jenkins_agent/workspace/DeclarativePipelineJob
@@ -914,7 +914,7 @@ Finished: SUCCESS
 
 <details><summary>Logs</summary>
 Branch indexing
-12:11:06 Connecting to https://api.github.com using Valdem88/****** (git)
+12:11:06 Connecting to https://api.github.com using duq3r/****** (git)
 Obtained roles/vector-role/Jenkinsfile from 06ff7197afd4d2b95ee01fdab7de5b244305ef5b
 [Pipeline] Start of Pipeline
 [Pipeline] node
@@ -1420,7 +1420,7 @@ node("linux"){
 ![](pic/Scripted_Pipeline2.jpg)
 
 <details><summary>Logs prod_run = true</summary>
-Started by user Яковлев Владимир Сергеевич
+Started by user Мадан Евгений
 [Pipeline] Start of Pipeline
 [Pipeline] node
 Running on agent-01 in /opt/jenkins_agent/workspace/Scripted Pipeline
@@ -1488,7 +1488,7 @@ Finished: SUCCESS
 </details>
 
 <details><summary>Logs prod_run = false</summary>
-Started by user Яковлев Владимир Сергеевич
+Started by user Мадан Евгений
 [Pipeline] Start of Pipeline
 [Pipeline] node
 Running on agent-01 in /opt/jenkins_agent/workspace/Scripted Pipeline
