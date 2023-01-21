@@ -121,24 +121,24 @@ jenkins-master-01          : ok=11   changed=9    unreachable=0    failed=0    s
 ![](pic/molecule_test_job.jpg)
 
 <details><summary>Logs</summary>
-Started by user Яковлев Владимир Сергеевич
+Started by user Evgheni Madan
 Running as SYSTEM
 Building remotely on agent-01 (linux) in workspace /opt/jenkins_agent/workspace/Freestyle Job
 The recommended git tool is: NONE
 using credential ca2e9602-6991-4c7d-aa5e-2ddbe3fa1c55
  > git rev-parse --resolve-git-dir /opt/jenkins_agent/workspace/Freestyle Job/.git # timeout=10
 Fetching changes from the remote Git repository
- > git config remote.origin.url https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs # timeout=10
-Fetching upstream changes from https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs
+ > git config remote.origin.url https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role # timeout=10
+Fetching upstream changes from https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role
  > git --version # timeout=10
  > git --version # 'git version 1.8.3.1'
 using GIT_ASKPASS to set credentials 
- > git fetch --tags --progress https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git fetch --tags --progress https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
 Checking out Revision 0c585430a8141ce9c3eca38ac1fff331500b6ffa (refs/remotes/origin/main)
  > git config core.sparsecheckout # timeout=10
  > git checkout -f 0c585430a8141ce9c3eca38ac1fff331500b6ffa # timeout=10
-Commit message: "DZ_dev-17_ansible-04-role-yakovlev_vs_4"
+Commit message: "08-ansible-04-role"
 First time build. Skipping changelog.
 [Freestyle Job] $ /bin/sh -xe /tmp/jenkins3223253752998323866.sh
 + pip3 install molecule==3.4.0 molecule_docker
@@ -476,14 +476,14 @@ The recommended git tool is: NONE
 using credential 7943d9ab-efa7-4520-b128-48f13295c4ae
 Fetching changes from the remote Git repository
 Checking out Revision 0c585430a8141ce9c3eca38ac1fff331500b6ffa (refs/remotes/origin/main)
-Commit message: "DZ_dev-17_ansible-04-role-yakovlev_vs_4"
+Commit message: "08-ansible-04-role"
  > git rev-parse --resolve-git-dir /opt/jenkins_agent/workspace/DeclarativePipelineJob/.git # timeout=10
- > git config remote.origin.url https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git # timeout=10
-Fetching upstream changes from https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git
+ > git config remote.origin.url https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git # timeout=10
+Fetching upstream changes from https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git
  > git --version # timeout=10
  > git --version # 'git version 1.8.3.1'
 using GIT_ASKPASS to set credentials git
- > git fetch --tags --progress https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git fetch --tags --progress https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
  > git config core.sparsecheckout # timeout=10
  > git checkout -f 0c585430a8141ce9c3eca38ac1fff331500b6ffa # timeout=10
@@ -904,7 +904,7 @@ Finished: SUCCESS
 
 3. Перенести Declarative Pipeline в репозиторий в файл `Jenkinsfile`.
 
-- [Jenkinsfile](https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs/blob/main/roles/vector-role/Jenkinsfile)
+- [Jenkinsfile](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/roles/vector-role/Jenkinsfile)
 
 4. Создать Multibranch Pipeline на запуск `Jenkinsfile` из репозитория.
 
@@ -927,13 +927,13 @@ The recommended git tool is: NONE
 using credential 7943d9ab-efa7-4520-b128-48f13295c4ae
 Cloning the remote Git repository
 Cloning with configured refspecs honoured and without tags
-Cloning repository https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git
+Cloning repository https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git
  > git init /opt/jenkins_agent/workspace/Multibranch_Pipeline_main # timeout=10
-Fetching upstream changes from https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git
+Fetching upstream changes from https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git
  > git --version # timeout=10
  > git --version # 'git version 1.8.3.1'
 using GIT_ASKPASS to set credentials git
- > git fetch --no-tags --progress https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git +refs/heads/main:refs/remotes/origin/main # timeout=10
+ > git fetch --no-tags --progress https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git +refs/heads/main:refs/remotes/origin/main # timeout=10
 Avoid second fetch
 Checking out Revision 06ff7197afd4d2b95ee01fdab7de5b244305ef5b (main)
 Commit message: "DZ_dev-17_ansible-04-role-yakovlev_vs_5"
@@ -948,19 +948,19 @@ First time build. Skipping changelog.
 The recommended git tool is: NONE
 using credential 7943d9ab-efa7-4520-b128-48f13295c4ae
 Fetching changes from the remote Git repository
- > git config remote.origin.url https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git # timeout=10
+ > git config remote.origin.url https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git # timeout=10
  > git config --add remote.origin.fetch +refs/heads/main:refs/remotes/origin/main # timeout=10
  > git config core.sparsecheckout # timeout=10
  > git checkout -f 06ff7197afd4d2b95ee01fdab7de5b244305ef5b # timeout=10
 Checking out Revision 06ff7197afd4d2b95ee01fdab7de5b244305ef5b (refs/remotes/origin/main)
 Commit message: "DZ_dev-17_ansible-04-role-yakovlev_vs_5"
  > git rev-parse --resolve-git-dir /opt/jenkins_agent/workspace/Multibranch_Pipeline_main/.git # timeout=10
- > git config remote.origin.url https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git # timeout=10
-Fetching upstream changes from https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git
+ > git config remote.origin.url https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git # timeout=10
+Fetching upstream changes from https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git
  > git --version # timeout=10
  > git --version # 'git version 1.8.3.1'
 using GIT_ASKPASS to set credentials git
- > git fetch --tags --progress https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git fetch --tags --progress https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role.git +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
  > git config core.sparsecheckout # timeout=10
  > git checkout -f 06ff7197afd4d2b95ee01fdab7de5b244305ef5b # timeout=10
@@ -1557,11 +1557,11 @@ Finished: SUCCESS
 
 8. Отправить ссылку на репозиторий с ролью и Declarative Pipeline и Scripted Pipeline.
 
-- [Vector-role](https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs/tree/main/roles/vector-role)
+- [Vector-role](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/tree/main/roles/vector-role)
 
-- [Declarative Pipeline](https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs/blob/main/roles/vector-role/Jenkinsfile)
+- [Declarative Pipeline](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/blob/main/roles/vector-role/Jenkinsfile)
 
-- [Scripted Pipeline](https://github.com/Valdem88/dev-17_ansible-04-role-yakovlev_vs/blob/main/roles/vector-role/ScriptedJenkinsfile)
+- [Scripted Pipeline](https://github.com/duq3r/mnt-ci-ansible-HW/tree/master/08-ansible-04-role/blob/main/roles/vector-role/ScriptedJenkinsfile)
 
 ## Необязательная часть
 
