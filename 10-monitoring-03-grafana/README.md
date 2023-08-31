@@ -44,11 +44,11 @@
   avg by(instance)(rate(node_cpu_seconds_total{job="nodeexporter",mode="idle"}[$__rate_interval])) * 100
   ```
 - CPULA 1/5/15
-  ```
+```
 avg by (instance)(rate(node_load1{}[$__rate_interval]))
 avg by (instance)(rate(node_load5{}[$__rate_interval]))
 avg by (instance)(rate(node_load15{}[$__rate_interval]))
-  ```
+```
 
 - Количество свободной оперативной памяти
 
