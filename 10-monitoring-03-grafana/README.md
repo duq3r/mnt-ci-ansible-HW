@@ -71,6 +71,12 @@ node_filesystem_free_bytes{fstype="ext4",instance="nodeexporter:9100",job="nodee
 
 Для решения ДЗ - приведите скриншот вашей итоговой Dashboard.
 
+## Ответ 3
+
+![](pic/4.png)
+
+Т.к. не указаны Каналы Notification, то выглядит так.
+![](pic/5.png)
 ## Задание 4
 Сохраните ваш Dashboard.
 
@@ -80,7 +86,7 @@ node_filesystem_free_bytes{fstype="ext4",instance="nodeexporter:9100",job="nodee
 
 В решении задания - приведите листинг этого файла.
 
-## ОТвет
+## Ответ 4
 
 ![dashboard.json](files/dashboard.json)
 
