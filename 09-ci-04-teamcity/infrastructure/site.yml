@@ -1,3 +1,5 @@
+# NEEDED BEFORE RUN OF Ansible script
+# sudo apt-get install acl  
 ---
 - name: Get Nexus installed
   hosts: nexus
